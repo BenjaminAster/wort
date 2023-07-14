@@ -1,0 +1,115 @@
+
+:root {
+	font-family: system-ui, sans-serif;
+	overflow-wrap: break-word;
+	-webkit-tap-highlight-color: transparent;
+
+	/* --selection: royalBlue; */
+	/* --selection: oklch(40% 60% 240deg); */
+	--selection: oklch(50% 100% 230deg);
+	--selection: oklch(50% 100% 140deg);
+	/* --selection: oklch(30% 0% 0deg); */
+	/* --selection: oklch(70% 100% 90deg); */
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--selection: lightSkyBlue;
+	}
+}
+
+body {
+	box-sizing: border-box;
+	min-block-size: 100vh;
+	min-block-size: 100dvb;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.editor-container {
+	flex-grow: 1;
+	display: flex;
+	position: relative;
+
+	.editor {
+		flex-grow: 1;
+		/* block-size: 100%; */
+		box-sizing: border-box;
+		padding: .5rem;
+		caret-color: transparent;
+		caret-color: red;
+		outline: none;
+
+		::selection {
+			background-color: transparent;
+			color: inherit;
+		}
+	}
+}
+
+/* code {
+	background-color: #8884;
+	padding: .1em .3em;
+	border: 1px solid #8885;
+	border-radius: .3em;
+} */
+
+.overlay {
+	position: absolute;
+	pointer-events: none;
+}
+
+.selection {
+	position: absolute;
+	left: calc(var(--x) * 1px);
+	top: calc(var(--y) * 1px);
+	width: calc(var(--width) * 1px);
+	height: calc(var(--height) * 1px);
+	/* background-color: color-mix(in sRGB, lime 50%, transparent); */
+	/* background-color: color-mix(in sRGB, royalBlue 50%, transparent); */
+	/* background-color: cornflowerBlue; */
+	/* background-color: color-mix(in sRGB, royalblue 50%, transparent); */
+	background-color: var(--selection);
+	z-index: -1;
+	/* border-radius: .2em; */
+	/* transition-property: left, top, width, height; */
+	/* transition-duration: 70ms; */
+}
+
+.caret {
+	--thickness: 1px;
+	position: absolute;
+	left: calc(var(--x) * 1px);
+	top: calc(var(--y) * 1px);
+	width: max(var(--width) * 1px, var(--thickness));
+	height: max(var(--height) * 1px, var(--thickness));
+	/* background-color: CanvasText; */
+	background-color: currentColor;
+	/* outline: .5px solid currentColor; */
+	pointer-events: none;
+	z-index: 1;
+	/* border-radius: 1px; */
+	/* transition-property: left, top; */
+	/* transition-duration: 100ms; */
+}
+
+.before-caret, .after-caret {
+	position: absolute;
+	z-index: -1;
+	left: calc(var(--x) * 1px);
+	top: calc(var(--y) * 1px);
+	width: calc(var(--width) * 1px);
+	height: calc(var(--height) * 1px);
+	pointer-events: none;
+	outline: 1px solid red;
+	outline-offset: 1px;
+}
+
+.before-caret {
+	background: green;
+}
+
+.after-caret {
+	background: darkviolet;
+}
