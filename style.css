@@ -3,11 +3,15 @@
 	font-family: system-ui, sans-serif;
 	overflow-wrap: break-word;
 	-webkit-tap-highlight-color: transparent;
+	line-height: 1.5;
 
 	/* --selection: royalBlue; */
 	/* --selection: oklch(40% 60% 240deg); */
 	--selection: oklch(50% 100% 230deg);
 	--selection: oklch(50% 100% 140deg);
+	--selection: oklch(52% 45% 265deg);
+	/* --selection: oklch(52% 45% 265deg / 50%); */
+	/* --selection: oklch(100% 0% 0deg / 30%); */
 	/* --selection: oklch(30% 0% 0deg); */
 	/* --selection: oklch(70% 100% 90deg); */
 }
@@ -20,26 +24,60 @@
 
 body {
 	box-sizing: border-box;
-	min-block-size: 100vh;
-	min-block-size: 100dvb;
+	block-size: 100dvb;
 	margin: 0;
 	display: flex;
 	flex-direction: column;
 }
 
+h1, h2, h3, h4, h5, h6, b {
+	font-weight: 600;
+}
+
+header {
+	padding: .5rem;
+	background-color: #8884;
+}
+
+footer {
+	padding: .2rem;
+	background-color: #8884;
+}
+
 .editor-container {
 	flex-grow: 1;
 	display: flex;
+	flex-direction: column;
 	position: relative;
+	overflow: hidden;
+	overflow: auto;
+	/* overflow: scroll; */
+	/* padding-block: 1rem; */
+	box-sizing: border-box;
 
 	.editor {
-		flex-grow: 1;
+		/* overflow: auto; */
+		overflow: visible;
+		/* flex-grow: 1; */
 		/* block-size: 100%; */
+		/* overflow: auto; */
+		font-size: 1.5rem;
+		line-height: 1.5;
+		padding: 1rem;
+		border: 1px solid #8886;
+		background-color: #8882;
+		margin-block: 1rem;
+		margin-inline: max(1rem, (100dvi - 40em) / 2);
 		box-sizing: border-box;
-		padding: .5rem;
+		/* padding-inline: max(1rem, (100dvi - 40em) / 2); */
 		caret-color: transparent;
-		caret-color: red;
+		/* caret-color: red; */
 		outline: none;
+		block-size: auto;
+
+		& > div:not(:last-of-type) {
+			margin-block-end: .5rem;
+		}
 
 		::selection {
 			background-color: transparent;
@@ -57,6 +95,8 @@ body {
 
 .overlay {
 	position: absolute;
+	top: 0;
+	left: 0;
 	pointer-events: none;
 }
 
@@ -78,20 +118,50 @@ body {
 }
 
 .caret {
+	--direction: ltr;
+	--writing-mode: horizontal-tb;
+	direction: var(--direction);
+	writing-mode: var(--writing-mode);
+
 	--thickness: 1px;
 	position: absolute;
-	left: calc(var(--x) * 1px);
-	top: calc(var(--y) * 1px);
-	width: max(var(--width) * 1px, var(--thickness));
-	height: max(var(--height) * 1px, var(--thickness));
+	inset-inline-start: calc(var(--inline-start) * 1px);
+	inset-block-start: calc(var(--block-start) * 1px);
+	/* inline-size: max(var(--inline-size) * 1px, var(--thickness));
+	block-size: max(var(--block-size) * 1px, var(--thickness)); */
+	inline-size: var(--thickness);
+	block-size: calc(var(--block-size) * 1px + 3px);
 	/* background-color: CanvasText; */
+	/* background-color: currentColor; */
+	background-color: #fff3;
 	background-color: currentColor;
 	/* outline: .5px solid currentColor; */
-	pointer-events: none;
-	z-index: 1;
+	z-index: 2;
 	/* border-radius: 1px; */
 	/* transition-property: left, top; */
-	/* transition-duration: 100ms; */
+	transition-property: inset-inline-start, inset-block-start, block-size;
+	transition-duration: 100ms;
+}
+
+.temp-caret {
+	--thickness: 1px;
+	position: absolute;
+	inset-inline-start: calc(var(--inline-start) * 1px);
+	inset-block-start: calc(var(--block-start) * 1px);
+	inline-size: var(--thickness);
+	block-size: calc(var(--block-size) * 1px);
+	background-color: red;
+	z-index: 3;
+}
+
+.temp-caret-range {
+	position: absolute;
+	inset-inline-start: calc(var(--inline-start) * 1px);
+	inset-block-start: calc(var(--block-start) * 1px);
+	block-size: calc(var(--block-size) * 1px);
+	inline-size: calc(var(--inline-size) * 1px);
+	background-color: green;
+	z-index: -1;
 }
 
 .before-caret, .after-caret {
