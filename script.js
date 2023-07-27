@@ -183,7 +183,7 @@ const updateHighlighting = () => {
 			const rectOfCaret = getClientRectsOfCaretOffset(0, 0)
 			const rectAfterCaret = getClientRectsOfCaretOffset(0);
 
-			// console.debug(rectBeforeCaret, rectAfterCaret);
+			console.debug(rectBeforeCaret, rectOfCaret, rectAfterCaret);
 			// console.debug(rectBeforeCaret, rectOfCaret);
 
 			// if (rectAfterCaret?.blockStart >= rectBeforeCaret?.blockStart + rectBeforeCaret?.blockSize / 2) {
@@ -224,7 +224,7 @@ const updateHighlighting = () => {
 		caretElement.style.setProperty("--block-start", caretRect.blockStart);
 		caretElement.style.setProperty("--block-size", caretRect.blockSize);
 
-		if (false) {
+		if (true) {
 			{
 				const range = new Range();
 				range.setStart(container, offset - 2);

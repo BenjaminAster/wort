@@ -161,6 +161,8 @@ footer {
 	inline-size: var(--thickness);
 	block-size: calc(var(--block-size) * 1px);
 	background-color: red;
+	outline: 1px solid magenta;
+	outline-offset: 1px;
 	z-index: 3;
 }
 
@@ -171,6 +173,8 @@ footer {
 	block-size: calc(var(--block-size) * 1px);
 	inline-size: calc(var(--inline-size) * 1px);
 	background-color: green;
+	outline: 1px solid lime;
+	outline-offset: 1px;
 	z-index: -1;
 }
 
