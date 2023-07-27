@@ -10,15 +10,21 @@
 	--selection: oklch(50% 100% 230deg);
 	--selection: oklch(50% 100% 140deg);
 	--selection: oklch(52% 45% 265deg);
+	--selection: #8886;
 	/* --selection: oklch(52% 45% 265deg / 50%); */
 	/* --selection: oklch(100% 0% 0deg / 30%); */
 	/* --selection: oklch(30% 0% 0deg); */
 	/* --selection: oklch(70% 100% 90deg); */
+
+
+
+	--link: red;
 }
 
 @media (prefers-color-scheme: light) {
 	:root {
 		--selection: lightSkyBlue;
+		--link: green;
 	}
 }
 
@@ -28,6 +34,10 @@ body {
 	margin: 0;
 	display: flex;
 	flex-direction: column;
+}
+
+a {
+	color: var(--link);
 }
 
 h1, h2, h3, h4, h5, h6, b {
@@ -54,36 +64,36 @@ footer {
 	/* overflow: scroll; */
 	/* padding-block: 1rem; */
 	box-sizing: border-box;
+}
 
-	.editor {
-		/* overflow: auto; */
-		overflow: visible;
-		/* flex-grow: 1; */
-		/* block-size: 100%; */
-		/* overflow: auto; */
-		font-size: 1.5rem;
-		line-height: 1.5;
-		padding: 1rem;
-		border: 1px solid #8886;
-		background-color: #8882;
-		margin-block: 1rem;
-		margin-inline: max(1rem, (100dvi - 40em) / 2);
-		box-sizing: border-box;
-		/* padding-inline: max(1rem, (100dvi - 40em) / 2); */
-		caret-color: transparent;
-		/* caret-color: red; */
-		outline: none;
-		block-size: auto;
+.editor {
+	/* overflow: auto; */
+	overflow: visible;
+	/* flex-grow: 1; */
+	/* block-size: 100%; */
+	/* overflow: auto; */
+	font-size: 1.5rem;
+	line-height: 1.5;
+	padding: 1rem;
+	border: 1px solid #8886;
+	background-color: #8882;
+	margin-block: 1rem;
+	margin-inline: max(1rem, (100dvi - 40em) / 2);
+	box-sizing: border-box;
+	/* padding-inline: max(1rem, (100dvi - 40em) / 2); */
+	caret-color: transparent;
+	/* caret-color: red; */
+	outline: none;
+	block-size: auto;
+}
 
-		& > div:not(:last-of-type) {
-			margin-block-end: .5rem;
-		}
+.editor > div:not(:last-of-type) {
+	margin-block-end: .5rem;
+}
 
-		::selection {
-			background-color: transparent;
-			color: inherit;
-		}
-	}
+.editor::selection, .editor ::selection {
+	background-color: transparent;
+	color: inherit;
 }
 
 /* code {

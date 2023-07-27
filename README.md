@@ -1,6 +1,11 @@
 
+# Wort
+
+[benjaminaster.com/wort](https://benjaminaster.com/wort/)
+
 ### Naming ideas:
 
+- Wort
 - Writer
 - Wipalu (Word is proprietary and LibreOffice ugly)
 - Wipaliu (Word is proprietary and LibreOffice is ugly)
@@ -11,4 +16,3 @@
 - Lituimo (LibreOffice is too ugly in my opinion)
 - Watwol (Word alternative that works on Linux)
 - Wariab (Word alternative running in a browser)
-

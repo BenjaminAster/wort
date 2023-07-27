@@ -1,6 +1,6 @@
 
-// / <reference types="better-typescript" />
-/// <reference path="../better-ts/index.d.ts" />
+/// <reference types="better-typescript" />
+// / <reference path="../better-ts/index.d.ts" />
 /// <reference path="./global.d.ts" />
 
 const editor = document.querySelector(".editor");
@@ -46,7 +46,7 @@ const clamp = (/** @type {number} */ min, /** @type {number} */ value, /** @type
 
 const updateHighlighting = () => {
 	console.debug("update highlighting");
-
+	
 	const selection = document.getSelection();
 
 	if (selection.rangeCount === 0) {
@@ -54,6 +54,12 @@ const updateHighlighting = () => {
 	}
 
 	const selectionRange = selection.getRangeAt(0);
+
+	// console.debug(
+	// 	selectionRange.startContainer, selectionRange.startOffset,
+	// 	selectionRange.endContainer, selectionRange.endOffset,
+	// )
+
 	// const { x, y, width, height } = range.getBoundingClientRect();
 	// if (selection.isCollapsed) {
 	// 	caretElement.hidden = false;
@@ -157,25 +163,34 @@ const updateHighlighting = () => {
 		}
 
 		$getCaretRect: {
-			const getClientRectsOfCaretOffset = (/** @type {number} */ caretOffset) => {
+			const getClientRectsOfCaretOffset = (/** @type {number} */ caretOffset, /** @type {number} */ rangeLength = 1) => {
 				// if (offset < 0 || offset >= container.length) return null;
 				const length = /** @type {Text} */ (container).length || container.textContent.length;
 				if (length === 0 && container instanceof Element) return getLayoutInfo(container).rects[0];
 				const range = new Range();
 				range.setStart(container, clamp(0, offset + caretOffset, length));
-				range.setEnd(container, clamp(0, offset + caretOffset + 1, length));
+				range.setEnd(container, clamp(0, offset + caretOffset + rangeLength, length));
 				const { rects } = getLayoutInfo(range);
-				if (rects.length > 1) console.debug(`caret range at offset ${caretOffset} has ${rects.length} client rects:`, rects);
-				// return rects.at(-1);
-				return rects.at(0);
+				// if (rects.length > 1) console.debug(`caret range at offset ${caretOffset} has ${rects.length} client rects:`, rects);
+				// return rects.at(caretOffset < 0 ? 0 : -1);
+				// return rects.at(caretOffset < 0 ? -1 : 0);
+				return rects.at(rangeLength < 1 ? -1 : 0);
+				// return rects.at(0);
 			}
 
 			const rectBeforeCaret = getClientRectsOfCaretOffset(-1);
-			const rectAfterCaret = getClientRectsOfCaretOffset(0);
+			const rectOfCaret = getClientRectsOfCaretOffset(0, 0)
+			// const rectAfterCaret = getClientRectsOfCaretOffset(0);
+
+			// console.debug(rectBeforeCaret, rectAfterCaret);
+			// console.debug(rectBeforeCaret, rectOfCaret);
 
 			// if (rectAfterCaret?.blockStart >= rectBeforeCaret?.blockStart + rectBeforeCaret?.blockSize / 2) {
-			if (rectAfterCaret?.blockStart >= rectBeforeCaret?.blockStart + rectBeforeCaret?.blockSize / 2) {
+			// if (rectAfterCaret?.blockStart >= rectBeforeCaret?.blockStart + rectBeforeCaret?.blockSize / 2) {
+			if (rectOfCaret?.blockStart >= rectBeforeCaret?.blockStart + rectBeforeCaret?.blockSize / 2) {
 				// caret is at the end of a wrapping line
+
+				// console.debug("caret is at the end of a wrapping line")
 
 				// if (lastPressedKey === "Home") {
 				if (["End"].includes(lastPressedKey)) {
@@ -186,9 +201,9 @@ const updateHighlighting = () => {
 				}
 			}
 
-			caretRect.inlineStart = rectAfterCaret.inlineStart;
-			caretRect.blockStart = rectAfterCaret.blockStart;
-			caretRect.blockSize = rectAfterCaret.blockSize;
+			caretRect.inlineStart = rectOfCaret.inlineStart;
+			caretRect.blockStart = rectOfCaret.blockStart;
+			caretRect.blockSize = rectOfCaret.blockSize;
 		}
 
 		const caretElement = (() => {
@@ -208,111 +223,111 @@ const updateHighlighting = () => {
 		caretElement.style.setProperty("--block-start", caretRect.blockStart);
 		caretElement.style.setProperty("--block-size", caretRect.blockSize);
 
-		// {
-		// 	{
-		// 		const range = new Range();
-		// 		range.setStart(container, offset - 2);
-		// 		range.setEnd(container, offset - 2);
-		// 		const { rects } = getLayoutInfo(range);
-		// 		if (rects.length !== 1) console.log(`[minus-2] rects length is not 1 but`, rects.length);
-		// 		const rect = rects[0];
-		// 		caretsElement.querySelector(".temp-caret.minus-2").style.setProperty("--inline-start", rect.inlineStart);
-		// 		caretsElement.querySelector(".temp-caret.minus-2").style.setProperty("--block-start", rect.blockStart);
-		// 		caretsElement.querySelector(".temp-caret.minus-2").style.setProperty("--block-size", rect.blockSize);
-		// 	}
-		// 	{
-		// 		const range = new Range();
-		// 		range.setStart(container, offset - 1);
-		// 		range.setEnd(container, offset - 1);
-		// 		const { rects } = getLayoutInfo(range);
-		// 		if (rects.length !== 1) console.log(`[minus-1] rects length is not 1 but`, rects.length);
-		// 		const rect = rects[0];
-		// 		caretsElement.querySelector(".temp-caret.minus-1").style.setProperty("--inline-start", rect.inlineStart);
-		// 		caretsElement.querySelector(".temp-caret.minus-1").style.setProperty("--block-start", rect.blockStart);
-		// 		caretsElement.querySelector(".temp-caret.minus-1").style.setProperty("--block-size", rect.blockSize);
-		// 	}
-		// 	{
-		// 		const range = new Range();
-		// 		range.setStart(container, offset);
-		// 		range.setEnd(container, offset);
-		// 		const { rects } = getLayoutInfo(range);
-		// 		if (rects.length !== 1) console.log(`[self] rects length is not 1 but`, rects.length);
-		// 		const rect = rects[0];
-		// 		caretsElement.querySelector(".temp-caret.self").style.setProperty("--inline-start", rect.inlineStart);
-		// 		caretsElement.querySelector(".temp-caret.self").style.setProperty("--block-start", rect.blockStart);
-		// 		caretsElement.querySelector(".temp-caret.self").style.setProperty("--block-size", rect.blockSize);
-		// 	}
-		// 	{
-		// 		const range = new Range();
-		// 		range.setStart(container, offset + 1);
-		// 		range.setEnd(container, offset + 1);
-		// 		const { rects } = getLayoutInfo(range);
-		// 		if (rects.length !== 1) console.log(`[plus-1] rects length is not 1 but`, rects.length);
-		// 		const rect = rects[0];
-		// 		caretsElement.querySelector(".temp-caret.plus-1").style.setProperty("--inline-start", rect.inlineStart);
-		// 		caretsElement.querySelector(".temp-caret.plus-1").style.setProperty("--block-start", rect.blockStart);
-		// 		caretsElement.querySelector(".temp-caret.plus-1").style.setProperty("--block-size", rect.blockSize);
-		// 	}
-		// 	{
-		// 		const range = new Range();
-		// 		range.setStart(container, offset + 2);
-		// 		range.setEnd(container, offset + 2);
-		// 		const { rects } = getLayoutInfo(range);
-		// 		if (rects.length !== 1) console.log(`[plus-2] rects length is not 1 but`, rects.length);
-		// 		const rect = rects[0];
-		// 		caretsElement.querySelector(".temp-caret.plus-2").style.setProperty("--inline-start", rect.inlineStart);
-		// 		caretsElement.querySelector(".temp-caret.plus-2").style.setProperty("--block-start", rect.blockStart);
-		// 		caretsElement.querySelector(".temp-caret.plus-2").style.setProperty("--block-size", rect.blockSize);
-		// 	}
-		// 	{
-		// 		const range = new Range();
-		// 		range.setStart(container, offset - 2);
-		// 		range.setEnd(container, offset - 1);
-		// 		const { rects } = getLayoutInfo(range);
-		// 		if (rects.length !== 1) console.log(`[before-before] rects length is not 1 but`, rects.length, rects);
-		// 		const rect = rects[0];
-		// 		caretsElement.querySelector(".temp-caret-range.before-before").style.setProperty("--inline-start", rect.inlineStart);
-		// 		caretsElement.querySelector(".temp-caret-range.before-before").style.setProperty("--block-start", rect.blockStart);
-		// 		caretsElement.querySelector(".temp-caret-range.before-before").style.setProperty("--block-size", rect.blockSize);
-		// 		caretsElement.querySelector(".temp-caret-range.before-before").style.setProperty("--inline-size", rect.inlineSize);
-		// 	}
-		// 	{
-		// 		const range = new Range();
-		// 		range.setStart(container, offset - 1);
-		// 		range.setEnd(container, offset);
-		// 		const { rects } = getLayoutInfo(range);
-		// 		if (rects.length !== 1) console.log(`[before] rects length is not 1 but`, rects.length, rects);
-		// 		const rect = rects[0];
-		// 		caretsElement.querySelector(".temp-caret-range.before").style.setProperty("--inline-start", rect.inlineStart);
-		// 		caretsElement.querySelector(".temp-caret-range.before").style.setProperty("--block-start", rect.blockStart);
-		// 		caretsElement.querySelector(".temp-caret-range.before").style.setProperty("--block-size", rect.blockSize);
-		// 		caretsElement.querySelector(".temp-caret-range.before").style.setProperty("--inline-size", rect.inlineSize);
-		// 	}
-		// 	{
-		// 		const range = new Range();
-		// 		range.setStart(container, offset);
-		// 		range.setEnd(container, offset + 1);
-		// 		const { rects } = getLayoutInfo(range);
-		// 		if (rects.length !== 1) console.log(`[after] rects length is not 1 but`, rects.length, rects);
-		// 		const rect = rects[0];
-		// 		caretsElement.querySelector(".temp-caret-range.after").style.setProperty("--inline-start", rect.inlineStart);
-		// 		caretsElement.querySelector(".temp-caret-range.after").style.setProperty("--block-start", rect.blockStart);
-		// 		caretsElement.querySelector(".temp-caret-range.after").style.setProperty("--block-size", rect.blockSize);
-		// 		caretsElement.querySelector(".temp-caret-range.after").style.setProperty("--inline-size", rect.inlineSize);
-		// 	}
-		// 	{
-		// 		const range = new Range();
-		// 		range.setStart(container, offset + 1);
-		// 		range.setEnd(container, offset + 2);
-		// 		const { rects } = getLayoutInfo(range);
-		// 		if (rects.length !== 1) console.log(`[after-after] rects length is not 1 but`, rects.length, rects);
-		// 		const rect = rects[0];
-		// 		caretsElement.querySelector(".temp-caret-range.after-after").style.setProperty("--inline-start", rect.inlineStart);
-		// 		caretsElement.querySelector(".temp-caret-range.after-after").style.setProperty("--block-start", rect.blockStart);
-		// 		caretsElement.querySelector(".temp-caret-range.after-after").style.setProperty("--block-size", rect.blockSize);
-		// 		caretsElement.querySelector(".temp-caret-range.after-after").style.setProperty("--inline-size", rect.inlineSize);
-		// 	}
-		// }
+		if (false) {
+			{
+				const range = new Range();
+				range.setStart(container, offset - 2);
+				range.setEnd(container, offset - 2);
+				const { rects } = getLayoutInfo(range);
+				if (rects.length !== 1) console.log(`[minus-2] rects length is not 1 but`, rects.length, rects);
+				const rect = rects[0];
+				caretsElement.querySelector(".temp-caret.minus-2").style.setProperty("--inline-start", rect.inlineStart);
+				caretsElement.querySelector(".temp-caret.minus-2").style.setProperty("--block-start", rect.blockStart);
+				caretsElement.querySelector(".temp-caret.minus-2").style.setProperty("--block-size", rect.blockSize);
+			}
+			{
+				const range = new Range();
+				range.setStart(container, offset - 1);
+				range.setEnd(container, offset - 1);
+				const { rects } = getLayoutInfo(range);
+				if (rects.length !== 1) console.log(`[minus-1] rects length is not 1 but`, rects.length, rects);
+				const rect = rects[0];
+				caretsElement.querySelector(".temp-caret.minus-1").style.setProperty("--inline-start", rect.inlineStart);
+				caretsElement.querySelector(".temp-caret.minus-1").style.setProperty("--block-start", rect.blockStart);
+				caretsElement.querySelector(".temp-caret.minus-1").style.setProperty("--block-size", rect.blockSize);
+			}
+			{
+				const range = new Range();
+				range.setStart(container, offset);
+				range.setEnd(container, offset);
+				const { rects } = getLayoutInfo(range);
+				if (rects.length !== 1) console.log(`[self] rects length is not 1 but`, rects.length, rects);
+				const rect = rects[0];
+				caretsElement.querySelector(".temp-caret.self").style.setProperty("--inline-start", rect.inlineStart);
+				caretsElement.querySelector(".temp-caret.self").style.setProperty("--block-start", rect.blockStart);
+				caretsElement.querySelector(".temp-caret.self").style.setProperty("--block-size", rect.blockSize);
+			}
+			{
+				const range = new Range();
+				range.setStart(container, offset + 1);
+				range.setEnd(container, offset + 1);
+				const { rects } = getLayoutInfo(range);
+				if (rects.length !== 1) console.log(`[plus-1] rects length is not 1 but`, rects.length, rects);
+				const rect = rects[0];
+				caretsElement.querySelector(".temp-caret.plus-1").style.setProperty("--inline-start", rect.inlineStart);
+				caretsElement.querySelector(".temp-caret.plus-1").style.setProperty("--block-start", rect.blockStart);
+				caretsElement.querySelector(".temp-caret.plus-1").style.setProperty("--block-size", rect.blockSize);
+			}
+			{
+				const range = new Range();
+				range.setStart(container, offset + 2);
+				range.setEnd(container, offset + 2);
+				const { rects } = getLayoutInfo(range);
+				if (rects.length !== 1) console.log(`[plus-2] rects length is not 1 but`, rects.length, rects);
+				const rect = rects[0];
+				caretsElement.querySelector(".temp-caret.plus-2").style.setProperty("--inline-start", rect.inlineStart);
+				caretsElement.querySelector(".temp-caret.plus-2").style.setProperty("--block-start", rect.blockStart);
+				caretsElement.querySelector(".temp-caret.plus-2").style.setProperty("--block-size", rect.blockSize);
+			}
+			{
+				const range = new Range();
+				range.setStart(container, offset - 2);
+				range.setEnd(container, offset - 1);
+				const { rects } = getLayoutInfo(range);
+				if (rects.length !== 1) console.log(`[before-before] rects length is not 1 but`, rects.length, rects);
+				const rect = rects[0];
+				caretsElement.querySelector(".temp-caret-range.before-before").style.setProperty("--inline-start", rect.inlineStart);
+				caretsElement.querySelector(".temp-caret-range.before-before").style.setProperty("--block-start", rect.blockStart);
+				caretsElement.querySelector(".temp-caret-range.before-before").style.setProperty("--block-size", rect.blockSize);
+				caretsElement.querySelector(".temp-caret-range.before-before").style.setProperty("--inline-size", rect.inlineSize);
+			}
+			{
+				const range = new Range();
+				range.setStart(container, offset - 1);
+				range.setEnd(container, offset);
+				const { rects } = getLayoutInfo(range);
+				if (rects.length !== 1) console.log(`[before] rects length is not 1 but`, rects.length, rects);
+				const rect = rects[0];
+				caretsElement.querySelector(".temp-caret-range.before").style.setProperty("--inline-start", rect.inlineStart);
+				caretsElement.querySelector(".temp-caret-range.before").style.setProperty("--block-start", rect.blockStart);
+				caretsElement.querySelector(".temp-caret-range.before").style.setProperty("--block-size", rect.blockSize);
+				caretsElement.querySelector(".temp-caret-range.before").style.setProperty("--inline-size", rect.inlineSize);
+			}
+			{
+				const range = new Range();
+				range.setStart(container, offset);
+				range.setEnd(container, offset + 1);
+				const { rects } = getLayoutInfo(range);
+				if (rects.length !== 1) console.log(`[after] rects length is not 1 but`, rects.length, rects);
+				const rect = rects[0];
+				caretsElement.querySelector(".temp-caret-range.after").style.setProperty("--inline-start", rect.inlineStart);
+				caretsElement.querySelector(".temp-caret-range.after").style.setProperty("--block-start", rect.blockStart);
+				caretsElement.querySelector(".temp-caret-range.after").style.setProperty("--block-size", rect.blockSize);
+				caretsElement.querySelector(".temp-caret-range.after").style.setProperty("--inline-size", rect.inlineSize);
+			}
+			{
+				const range = new Range();
+				range.setStart(container, offset + 1);
+				range.setEnd(container, offset + 2);
+				const { rects } = getLayoutInfo(range);
+				if (rects.length !== 1) console.log(`[after-after] rects length is not 1 but`, rects.length, rects);
+				const rect = rects[0];
+				caretsElement.querySelector(".temp-caret-range.after-after").style.setProperty("--inline-start", rect.inlineStart);
+				caretsElement.querySelector(".temp-caret-range.after-after").style.setProperty("--block-start", rect.blockStart);
+				caretsElement.querySelector(".temp-caret-range.after-after").style.setProperty("--block-size", rect.blockSize);
+				caretsElement.querySelector(".temp-caret-range.after-after").style.setProperty("--inline-size", rect.inlineSize);
+			}
+		}
 
 		// {
 		// 	const range = new Range();
@@ -386,7 +401,7 @@ const updateHighlighting = () => {
 };
 
 document.addEventListener("selectionchange", () => {
-	console.debug("selectionchange")
+	// console.debug("selectionchange")
 	updateHighlighting()
 });
 window.addEventListener("resize", updateHighlighting);

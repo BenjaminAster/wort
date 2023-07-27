@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480">
+	<style>
+		:root {
+			color-scheme: dark light;
+			font-family: system-ui, sans-serif;
+			--text: white;
+		}
+
+		@media (prefers-color-scheme: light) {
+			:root {
+				--text: black;
+			}
+		}
+
+		.text {
+			fill: var(--text);
+			dominant-baseline: central;
+			text-anchor: middle;
+			font-size: 9rem;
+			font-weight: bold;
+			scale: 100% 200%;
+			transform-origin: center center;
+		}
+	</style>
+
+	<text class="text" x="240" y="240">WORT</text>
+</svg>
