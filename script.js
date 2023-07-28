@@ -46,7 +46,7 @@ const clamp = (/** @type {number} */ min, /** @type {number} */ value, /** @type
 
 const updateHighlighting = () => {
 	console.debug("update highlighting");
-	
+
 	const selection = document.getSelection();
 
 	if (selection.rangeCount === 0) {
@@ -163,48 +163,100 @@ const updateHighlighting = () => {
 		}
 
 		$getCaretRect: {
-			const getClientRectsOfCaretOffset = (/** @type {number} */ caretOffset, /** @type {number} */ rangeLength = 1) => {
+			const getRectsFromRelativeRange = (/** @type {number} */ start, /** @type {number} */ length = 0) => {
 				// if (offset < 0 || offset >= container.length) return null;
-				const length = /** @type {Text} */ (container).length || container.textContent.length;
-				if (length === 0 && container instanceof Element) return getLayoutInfo(container).rects[0];
+				// const length = /** @type {Text} */ (container).length || container.textContent.length;
+				const contentLength = container.textContent.length;
+				if (contentLength === 0 && container instanceof Element) return getLayoutInfo(container).rects;
 				const range = new Range();
-				range.setStart(container, clamp(0, offset + caretOffset, length));
-				range.setEnd(container, clamp(0, offset + caretOffset + rangeLength, length));
+				range.setStart(container, clamp(0, offset + start, contentLength));
+				range.setEnd(container, clamp(0, offset + start + length, contentLength));
 				const { rects } = getLayoutInfo(range);
-				console.debug(rects);
+				console.debug(...rects);
 				// if (rects.length > 1) console.debug(`caret range at offset ${caretOffset} has ${rects.length} client rects:`, rects);
 				// return rects.at(caretOffset < 0 ? 0 : -1);
 				// return rects.at(caretOffset < 0 ? -1 : 0);
-				return rects.at(rangeLength < 1 ? -1 : 0);
+				// return rects.at(length < 1 ? -1 : 0);
+				return rects;
 				// return rects.at(0);
 			}
 
-			const rectBeforeCaret = getClientRectsOfCaretOffset(-1);
-			const rectOfCaret = getClientRectsOfCaretOffset(0, 0)
-			const rectAfterCaret = getClientRectsOfCaretOffset(0);
+			const rectToCompare1 = getRectsFromRelativeRange(-1).at(-1);
+			const rectToCompare2 = getRectsFromRelativeRange(0)[1] ?? getRectsFromRelativeRange(0, 1)[0];
 
-			console.debug(rectBeforeCaret, rectOfCaret, rectAfterCaret);
+			if (
+				rectToCompare1.blockStart + rectToCompare1.blockSize
+				<
+				rectToCompare2.blockStart + rectToCompare2.blockSize / 3
+			) {
+				if (lastPressedKey === "End") {
+					caretRect.inlineStart = rectToCompare1.inlineStart + parseFloat(fontSize) / 4;
+					caretRect.blockStart = rectToCompare1.blockStart;
+					caretRect.blockSize = rectToCompare1.blockSize;
+				} else {
+					console.debug(1)
+					caretRect.inlineStart = rectToCompare2.inlineStart;
+					caretRect.blockStart = rectToCompare2.blockStart;
+					caretRect.blockSize = rectToCompare2.blockSize;
+				}
+			} else {
+				const rectOfCaret = getRectsFromRelativeRange(0)[0];
+				caretRect.inlineStart = rectOfCaret.inlineStart;
+				caretRect.blockStart = rectOfCaret.blockStart;
+				caretRect.blockSize = rectOfCaret.blockSize;
+			}
+
+			// const firstRectBeforeCaret = getRectsFromRelativeRange(-1, 1)[0];
+			// const lastRectAfterCaret = getRectsFromRelativeRange(0, 1).at(-1);
+
+			// if (
+			// 	lastRectAfterCaret.blockStart + lastRectAfterCaret.blockSize / 3
+			// 	>
+			// 	firstRectBeforeCaret.blockStart + firstRectBeforeCaret.blockSize
+			// ) {
+			// 	if (lastPressedKey === "End") {
+			// 		caretRect.inlineStart = firstRectBeforeCaret.inlineStart + parseFloat(fontSize) / 4;
+			// 		caretRect.blockStart = firstRectBeforeCaret.blockStart;
+			// 		caretRect.blockSize = firstRectBeforeCaret.blockSize;
+			// 	} else {
+			// 		console.debug(1)
+			// 		caretRect.inlineStart = lastRectAfterCaret.inlineStart;
+			// 		caretRect.blockStart = lastRectAfterCaret.blockStart;
+			// 		caretRect.blockSize = lastRectAfterCaret.blockSize;
+			// 	}
+			// } else {
+			// 	const rectOfCaret = getRectsFromRelativeRange(0)[0];
+			// 	caretRect.inlineStart = rectOfCaret.inlineStart;
+			// 	caretRect.blockStart = rectOfCaret.blockStart;
+			// 	caretRect.blockSize = rectOfCaret.blockSize;
+			// }
+
+			// const rectBeforeCaret = getRectsFromRelativeRange(-1);
+			// const rectOfCaret = getRectsFromRelativeRange(0, 0)
+			// const rectAfterCaret = getRectsFromRelativeRange(0);
+
+			// console.debug(rectBeforeCaret, rectOfCaret, rectAfterCaret);
 			// console.debug(rectBeforeCaret, rectOfCaret);
 
 			// if (rectAfterCaret?.blockStart >= rectBeforeCaret?.blockStart + rectBeforeCaret?.blockSize / 2) {
 			// if (rectAfterCaret?.blockStart >= rectBeforeCaret?.blockStart + rectBeforeCaret?.blockSize / 2) {
-			if (rectOfCaret?.blockStart >= rectBeforeCaret?.blockStart + rectBeforeCaret?.blockSize / 2) {
-				// caret is at the end of a wrapping line
+			// if (rectOfCaret?.blockStart >= rectBeforeCaret?.blockStart + rectBeforeCaret?.blockSize / 2) {
+			// 	// caret is at the end of a wrapping line
 
-				// console.debug("caret is at the end of a wrapping line")
+			// 	// console.debug("caret is at the end of a wrapping line")
 
-				// if (lastPressedKey === "Home") {
-				if (["End"].includes(lastPressedKey)) {
-					caretRect.inlineStart = rectBeforeCaret.inlineStart + parseFloat(fontSize) / 4;
-					caretRect.blockStart = rectBeforeCaret.blockStart;
-					caretRect.blockSize = rectBeforeCaret.blockSize;
-					break $getCaretRect;
-				}
-			}
+			// 	// if (lastPressedKey === "Home") {
+			// 	if (["End"].includes(lastPressedKey)) {
+			// 		caretRect.inlineStart = rectBeforeCaret.inlineStart + parseFloat(fontSize) / 4;
+			// 		caretRect.blockStart = rectBeforeCaret.blockStart;
+			// 		caretRect.blockSize = rectBeforeCaret.blockSize;
+			// 		break $getCaretRect;
+			// 	}
+			// }
 
-			caretRect.inlineStart = rectOfCaret.inlineStart;
-			caretRect.blockStart = rectOfCaret.blockStart;
-			caretRect.blockSize = rectOfCaret.blockSize;
+			// caretRect.inlineStart = rectOfCaret.inlineStart;
+			// caretRect.blockStart = rectOfCaret.blockStart;
+			// caretRect.blockSize = rectOfCaret.blockSize;
 		}
 
 		const caretElement = (() => {
@@ -224,7 +276,7 @@ const updateHighlighting = () => {
 		caretElement.style.setProperty("--block-start", caretRect.blockStart);
 		caretElement.style.setProperty("--block-size", caretRect.blockSize);
 
-		if (true) {
+		if (false) {
 			{
 				const range = new Range();
 				range.setStart(container, offset - 2);

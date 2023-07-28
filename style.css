@@ -61,17 +61,10 @@ footer {
 	position: relative;
 	overflow: hidden;
 	overflow: auto;
-	/* overflow: scroll; */
-	/* padding-block: 1rem; */
-	box-sizing: border-box;
 }
 
 .editor {
-	/* overflow: auto; */
 	overflow: visible;
-	/* flex-grow: 1; */
-	/* block-size: 100%; */
-	/* overflow: auto; */
 	font-size: 1.5rem;
 	line-height: 1.5;
 	padding: 1rem;
@@ -79,10 +72,7 @@ footer {
 	background-color: #8882;
 	margin-block: 1rem;
 	margin-inline: max(1rem, (100dvi - 40em) / 2);
-	box-sizing: border-box;
-	/* padding-inline: max(1rem, (100dvi - 40em) / 2); */
 	caret-color: transparent;
-	/* caret-color: red; */
 	outline: none;
 	block-size: auto;
 }
