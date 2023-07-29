@@ -16,8 +16,9 @@ const caretFragment = caretsElement.querySelector(":scope > template").content;
 let carets = 0;
 
 let /** @type {string} */ lastPressedKey;
-
+// let wasAtLineStartPreviously = false;
 let /** @type {number} */ currentCaretBlinkingTimeoutId;
+let /** @type {Partial<LogicalDOMRect>} */ prevCaretRect;
 
 const removeChildren = (/** @type {Element} */ element) => {
 	for (const child of [...element.children]) {
@@ -30,7 +31,7 @@ const clamp = (/** @type {number} */ min, /** @type {number} */ value, /** @type
 );
 
 const updateHighlighting = () => {
-	console.debug("update highlighting");
+	// console.debug("update highlighting");
 
 	const selection = document.getSelection();
 
@@ -63,6 +64,8 @@ const updateHighlighting = () => {
 		return { rects, direction, writingMode };
 	}
 
+	if (currentCaretBlinkingTimeoutId) window.clearTimeout(currentCaretBlinkingTimeoutId);
+
 	$handleCaretsOrSelection: if (selection.isCollapsed) {
 		let /** @type {Partial<LogicalDOMRect>} */ caretRect = {};
 
@@ -82,6 +85,8 @@ const updateHighlighting = () => {
 
 		const container = selectionRange.startContainer;
 
+		// console.log(container)
+
 		const { direction, writingMode, fontSize, fontStyle } = window.getComputedStyle(container instanceof Element ? container : container.parentElement);
 
 		if (!editor.contains(container)) {
@@ -97,34 +102,49 @@ const updateHighlighting = () => {
 			range.setStart(container, clamp(0, offset + start, contentLength));
 			range.setEnd(container, clamp(0, offset + start + length, contentLength));
 			const { rects } = getLayoutInfo(range);
+			// console.debug(rects)
 			return rects;
-		}
+		};
 
+		const isHigherUpThan = (/** @type {Partial<LogicalDOMRect>} */ rect1, /** @type {Partial<LogicalDOMRect>} */ rect2) => (
+			rect1.blockStart + rect1.blockSize
+			<
+			rect2.blockStart + rect2.blockSize / 3
+		);
+
+		const rectsOfCaret = getRectsFromRelativeRange(0);
 		const rectToCompare1 = getRectsFromRelativeRange(-1).at(-1);
-		const rectToCompare2 = getRectsFromRelativeRange(0)[1] ?? getRectsFromRelativeRange(0, 1)[0];
+		const rectToCompare2 = rectsOfCaret[1] ?? getRectsFromRelativeRange(0, 1)[0];
+
+		// console.log(getRectsFromRelativeRange(0, 0));
 
 		if (
 			rectToCompare1 && rectToCompare2
-			&& (
-				rectToCompare1.blockStart + rectToCompare1.blockSize
-				<
-				rectToCompare2.blockStart + rectToCompare2.blockSize / 3
-			)
+			&& isHigherUpThan(rectToCompare1, rectToCompare2)
 		) {
-			if (lastPressedKey === "End") {
+			if (
+				lastPressedKey === "End"
+				||
+				(lastPressedKey === "ArrowDown" && isHigherUpThan(prevCaretRect, rectToCompare1))
+				||
+				(lastPressedKey === "ArrowUp" && !isHigherUpThan(rectToCompare2, prevCaretRect))
+			) {
 				caretRect.inlineStart = rectToCompare1.inlineStart + parseFloat(fontSize) / 3;
 				caretRect.blockStart = rectToCompare1.blockStart;
 				caretRect.blockSize = rectToCompare1.blockSize;
+				// wasAtLineStartPreviously = false;
 			} else {
 				caretRect.inlineStart = rectToCompare2.inlineStart;
 				caretRect.blockStart = rectToCompare2.blockStart;
 				caretRect.blockSize = rectToCompare2.blockSize;
+				// console.debug("%cat line start", "color: cyan");
+				// wasAtLineStartPreviously = true;
 			}
 		} else {
-			const rectOfCaret = getRectsFromRelativeRange(0)[0];
-			caretRect.inlineStart = rectOfCaret.inlineStart;
-			caretRect.blockStart = rectOfCaret.blockStart;
-			caretRect.blockSize = rectOfCaret.blockSize;
+			caretRect.inlineStart = rectsOfCaret[0].inlineStart;
+			caretRect.blockStart = rectsOfCaret[0].blockStart;
+			caretRect.blockSize = rectsOfCaret[0].blockSize;
+			// wasAtLineStartPreviously = false;
 		}
 
 		const caretElement = (() => {
@@ -144,25 +164,27 @@ const updateHighlighting = () => {
 		caretElement.classList.toggle("italic", fontStyle === "italic");
 
 		caretElement.classList.remove("blink");
-		if (currentCaretBlinkingTimeoutId) window.clearTimeout(currentCaretBlinkingTimeoutId);
 		currentCaretBlinkingTimeoutId = window.setTimeout(() => {
 			caretElement.classList.add("blink");
 			currentCaretBlinkingTimeoutId = null;
 		}, 700);
+
+		prevCaretRect = caretRect;
 	} else {
 		{
 			carets = 0;
 			removeChildren(caretsElement);
+			// wasAtLineStartPreviously = false;
 		}
 
-		console.time("treewalkerfind");
+		// console.time("treewalkerfind");
 		const container = selectionRange.commonAncestorContainer;
 		if (!editor.contains(container)) {
 			break $handleCaretsOrSelection;
 		}
 		const walker = document.createTreeWalker(container);
 		while (walker.nextNode() && walker.currentNode !== selectionRange.startContainer);
-		console.timeEnd("treewalkerfind");
+		// console.timeEnd("treewalkerfind");
 		let isStartContainer = true;
 		let isEndContainer = false;
 
@@ -206,9 +228,9 @@ window.addEventListener("blur", () => {
 window.addEventListener("focus", updateHighlighting);
 
 editor.addEventListener("input", ({ inputType }) => {
-	console.log(inputType);
+	// console.log(inputType);
 
-	console.time("checkinputtype")
+	// console.time("checkinputtype")
 
 	if ([
 		"deleteWordBackward",
@@ -224,10 +246,10 @@ editor.addEventListener("input", ({ inputType }) => {
 		"deleteContentBackward",
 		"deleteContentForward",
 	].includes(inputType)) {
-		console.timeEnd("checkinputtype");
+		// console.timeEnd("checkinputtype");
 		updateHighlighting();
 	} else {
-		console.timeEnd("checkinputtype");
+		// console.timeEnd("checkinputtype");
 	}
 });
 
