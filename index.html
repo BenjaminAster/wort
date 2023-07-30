@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content" />
-	<meta name="color-scheme" content="dark light" />
 	<meta name="robots" content="all" />
 	<meta name="author" content="Benjamin Aster" />
 	<meta name="description" content="Rich text" />
@@ -15,7 +14,7 @@
 	<!-- <link rel="icon" href="./assets/icon.png" type="image/png" sizes="any" /> -->
 	<!-- <link rel="manifest" href="./app.webmanifest" /> -->
 
-	<title>Rich Text Editor</title>
+	<title>Wort &ndash; A Word alternative</title>
 
 	<link rel="stylesheet" href="./style.css" />
 
@@ -33,9 +32,14 @@
 	<!-- <div class="cursor"></div> -->
 
 	<header>
-		header
-		[bold]
-		[italic]
+		<button id="bold" title="Toggle bold (Ctrl+B)"><code><b>B</b></code></button>
+		<button id="italic" title="Toggle italic (Ctrl+I)"><code><i>I</i></code></button>
+		<button id="underline" title="Toggle underline (Ctrl+U)"><code><u>U</u></code></button>
+		<button id="strikethrough" title="Toggle strikethrough (Ctrl+Shift+S)"><code><s>S</s></code></button>
+		<label>
+			<input type="checkbox" id="light-theme">
+			light
+		</label>
 	</header>
 
 	<div class="editor-container">
@@ -50,7 +54,6 @@
 					<div class="selection"></div>
 				</template>
 			</div>
-			<div class="inverse-border-radius"></div>
 		</div>
 		<div class="editor" contentEditable spellcheck="false">
 			<h1>Word processor</h1>

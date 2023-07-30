@@ -13,6 +13,18 @@ const selectionFragment = selectionsElement.querySelector(":scope > template").c
 const caretsElement = document.querySelector(".carets");
 const caretFragment = caretsElement.querySelector(":scope > template").content;
 
+const isApple = [
+	"iPhone",
+	"iPad",
+	"Macintosh",
+	"MacIntel",
+	"Mac",
+	"macOS",
+	"iOS",
+	"iPhoneOS",
+	"iPadOS",
+].includes(navigator.userAgentData?.platform || navigator.platform);
+
 let carets = 0;
 
 let /** @type {string} */ lastPressedKey;
@@ -31,7 +43,7 @@ const clamp = (/** @type {number} */ min, /** @type {number} */ value, /** @type
 );
 
 const updateHighlighting = () => {
-	// console.debug("update highlighting");
+	console.debug("update highlighting");
 
 	const selection = document.getSelection();
 
@@ -210,25 +222,35 @@ const updateHighlighting = () => {
 	}
 };
 
-document.addEventListener("selectionchange", () => {
+let highlightAlreadyUpdated = false;
+
+document.addEventListener("selectionchange", async () => {
+	console.debug("selectionchange");
+	await 0;
+	if (highlightAlreadyUpdated) {
+		highlightAlreadyUpdated = false;
+		return;
+	};
 	updateHighlighting();
 });
 
 window.addEventListener("resize", updateHighlighting);
 
-editor.addEventListener("keydown", ({ key }) => {
+editor.addEventListener("keydown", async ({ key }) => {
 	lastPressedKey = key;
 });
 
-window.addEventListener("blur", () => {
+window.addEventListener("blur", async () => {
 	carets = 0;
 	removeChildren(caretsElement);
 });
 
 window.addEventListener("focus", updateHighlighting);
 
-editor.addEventListener("input", ({ inputType }) => {
-	// console.log(inputType);
+editor.addEventListener("input", async ({ inputType }) => {
+	console.debug("input", inputType);
+
+	await 0;
 
 	// console.time("checkinputtype")
 
@@ -252,5 +274,66 @@ editor.addEventListener("input", ({ inputType }) => {
 		// console.timeEnd("checkinputtype");
 	}
 });
+
+const handleExecCommand = (/** @type {ExecCommandCommandId} */ commandId) => {
+	highlightAlreadyUpdated = true;
+	console.debug("before execcommand")
+	document.execCommand(commandId);
+	console.debug("execcommand finished")
+	updateHighlighting();
+	console.debug("highlight update after execcommand finished")
+}
+
+window.addEventListener("keydown", (event) => {
+	if (event.ctrlKey === !isApple && event.metaKey === isApple && !event.altKey) {
+		if (event.shiftKey) {
+			if (event.key === "S") {
+				event.preventDefault();
+				handleExecCommand("strikethrough");
+			}
+		} else {
+			if (event.key === "b") {
+				event.preventDefault();
+				handleExecCommand("bold");
+			} else if (event.key === "i") {
+				event.preventDefault();
+				handleExecCommand("italic");
+			} else if (event.key === "u") {
+				event.preventDefault();
+				handleExecCommand("underline");
+			}
+		}
+	}
+});
+
+document.querySelector("button#bold").addEventListener("click", () => {
+	handleExecCommand("bold");
+});
+
+document.querySelector("button#italic").addEventListener("click", () => {
+	handleExecCommand("italic");
+});
+
+document.querySelector("button#underline").addEventListener("click", () => {
+	handleExecCommand("underline");
+});
+
+document.querySelector("button#strikethrough").addEventListener("click", () => {
+	handleExecCommand("strikethrough");
+});
+
+{
+	let lightTheme = window.matchMedia("(prefers-color-scheme: light)").matches;
+	const updateTheme = () => {
+		document.documentElement.dataset.theme = lightTheme ? "light" : "dark";
+	};
+	const checkbox = document.querySelector("input[type=checkbox]#light-theme");
+	checkbox.checked = lightTheme;
+	checkbox.addEventListener("change", () => {
+		lightTheme = checkbox.checked;
+		updateTheme();
+	});
+	updateTheme();
+}
 
 export { };
