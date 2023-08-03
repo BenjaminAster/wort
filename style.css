@@ -27,6 +27,7 @@
 		--header: var(--gray-3);
 		--header-bottom-border: transparent;
 		--footer: var(--gray-3);
+		--footer-top-border: transparent;
 		--editor-area: var(--gray-1);
 		--sheet: var(--gray-2);
 
@@ -47,7 +48,8 @@
 
 	--header: var(--background);
 	--header-bottom-border: var(--gray-2);
-	--footer: var(--gray-2);
+	--footer: var(--background);
+	--footer-top-border: var(--gray-2);
 	--editor-area: var(--gray-1);
 	--sheet: var(--background);
 
@@ -63,21 +65,32 @@ body {
 	flex-direction: column;
 }
 
-a {
-	color: var(--link);
-	text-decoration: none;
-}
+@layer global {
+	a {
+		color: var(--link);
+		text-decoration: none;
+	}
 
-a:hover {
-	text-decoration: underline;
-}
+	a:hover {
+		text-decoration: underline;
+	}
 
-h1, h2, h3, h4, h5, h6, b {
-	font-weight: 600;
-}
+	h1, h2, h3, h4, h5, h6, b {
+		font-weight: 600;
+	}
 
-button {
-	all: unset;
+	button, a, label, summary {
+		cursor: pointer;
+	}
+
+	input {
+		all: unset;
+		appearance: auto;
+	}
+
+	button {
+		all: unset;
+	}
 }
 
 @media (hover) {
@@ -87,16 +100,7 @@ button {
 }
 
 button:active {
-	background-color: color-mix(in srgb, transparent, var(--background) 20%);
-}
-
-button, :any-link, label, summary {
-	cursor: pointer;
-}
-
-input {
-	all: unset;
-	appearance: auto;
+	background-color: color-mix(in srgb, black, transparent 90%);
 }
 
 header {
@@ -119,6 +123,7 @@ footer {
 	padding-block: .1rem;
 	padding-inline: .3rem;
 	background-color: var(--footer);
+	border-block-start: 1px solid var(--footer-top-border);
 }
 
 .editor-container {
@@ -134,7 +139,7 @@ footer {
 	font-size: 1.5rem;
 	line-height: 1.5;
 	padding: 2rem;
-	padding-block: .5rem;
+	padding-block: 2.5rem;
 	border: 1px solid var(--sheet-border);
 	background-color: var(--sheet);
 	/* background-color: #8888; */
@@ -146,8 +151,16 @@ footer {
 	block-size: auto;
 }
 
-.editor > div:not(:last-of-type) {
+.editor > div {
 	margin-block-end: .5rem;
+}
+
+.editor > :first-child {
+	margin-block-start: 0;
+}
+
+.editor > :last-child {
+	margin-block-end: 0;
 }
 
 .editor::selection, .editor ::selection {

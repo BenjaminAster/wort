@@ -43,7 +43,7 @@ const clamp = (/** @type {number} */ min, /** @type {number} */ value, /** @type
 );
 
 const updateHighlighting = () => {
-	console.debug("update highlighting");
+	console.debug("%cupdate highlighting", "color: cadetblue");
 
 	const selection = document.getSelection();
 
@@ -66,6 +66,7 @@ const updateHighlighting = () => {
 		let /** @type {LogicalDOMRect[]} */ rects = [...domItem.getClientRects()].map(({ x, y, width, height }) => {
 			x -= physicalEditorRect.x;
 			y -= physicalEditorRect.y;
+			// TODO: actually handle directions and writing modes
 			return {
 				inlineStart: direction === "ltr" ? x : physicalEditorRect.width - x - width,
 				blockStart: y,
@@ -128,6 +129,8 @@ const updateHighlighting = () => {
 		const rectToCompare1 = getRectsFromRelativeRange(-1).at(-1);
 		const rectToCompare2 = rectsOfCaret[1] ?? getRectsFromRelativeRange(0, 1)[0];
 
+		console.log(container, offset);
+
 		// console.log(getRectsFromRelativeRange(0, 0));
 
 		if (
@@ -152,11 +155,13 @@ const updateHighlighting = () => {
 				// console.debug("%cat line start", "color: cyan");
 				// wasAtLineStartPreviously = true;
 			}
-		} else {
+		} else if (rectsOfCaret[0]) {
 			caretRect.inlineStart = rectsOfCaret[0].inlineStart;
 			caretRect.blockStart = rectsOfCaret[0].blockStart;
 			caretRect.blockSize = rectsOfCaret[0].blockSize;
 			// wasAtLineStartPreviously = false;
+		} else {
+			console.error("no caret rect");
 		}
 
 		const caretElement = (() => {
@@ -223,38 +228,53 @@ const updateHighlighting = () => {
 };
 
 let highlightAlreadyUpdated = false;
+let tooManySelectionchangesMightFollow = false; // circumvent WebKit bug (dispatches 3 selectionchange events)
+let prevRealSelectionchangeTime = 0;
 
-document.addEventListener("selectionchange", async () => {
-	console.debug("selectionchange");
-	await 0;
+document.addEventListener("selectionchange", () => {
+	console.debug("selectionchange", performance.now());
+
 	if (highlightAlreadyUpdated) {
 		highlightAlreadyUpdated = false;
+		prevRealSelectionchangeTime = performance.now();
+		tooManySelectionchangesMightFollow = true;
 		return;
 	};
+
+	if (tooManySelectionchangesMightFollow) {
+		if (performance.now() < prevRealSelectionchangeTime + 20) return;
+		tooManySelectionchangesMightFollow = false;
+	}
+
 	updateHighlighting();
 });
 
 window.addEventListener("resize", updateHighlighting);
 
-editor.addEventListener("keydown", async ({ key }) => {
+editor.addEventListener("keydown", ({ key }) => {
 	lastPressedKey = key;
 });
 
-window.addEventListener("blur", async () => {
+window.addEventListener("blur", () => {
 	carets = 0;
 	removeChildren(caretsElement);
 });
 
 window.addEventListener("focus", updateHighlighting);
 
-editor.addEventListener("input", async ({ inputType }) => {
+editor.addEventListener("beforeinput", event => {
+	console.debug("beforeinput", event)
+});
+
+editor.addEventListener("input", ({ inputType }) => {
 	console.debug("input", inputType);
 
-	await 0;
+	// await 0;
 
 	// console.time("checkinputtype")
 
 	if ([
+		// https://w3c.github.io/input-events/#interface-InputEvent-Attributes
 		"deleteWordBackward",
 		"deleteWordForward",
 		"deleteSoftLineBackward",
@@ -278,6 +298,7 @@ editor.addEventListener("input", async ({ inputType }) => {
 const handleExecCommand = (/** @type {ExecCommandCommandId} */ commandId) => {
 	highlightAlreadyUpdated = true;
 	console.debug("before execcommand")
+	// TODO: replace execCommand() with a non-buggy, non-non-standardized, interoperable, self-made implementation
 	document.execCommand(commandId);
 	console.debug("execcommand finished")
 	updateHighlighting();
@@ -306,19 +327,23 @@ window.addEventListener("keydown", (event) => {
 	}
 });
 
-document.querySelector("button#bold").addEventListener("click", () => {
+document.querySelector("header").addEventListener("pointerdown", (event) => {
+	event.preventDefault();
+});
+
+document.querySelector("#bold").addEventListener("click", () => {
 	handleExecCommand("bold");
 });
 
-document.querySelector("button#italic").addEventListener("click", () => {
+document.querySelector("#italic").addEventListener("click", () => {
 	handleExecCommand("italic");
 });
 
-document.querySelector("button#underline").addEventListener("click", () => {
+document.querySelector("#underline").addEventListener("click", () => {
 	handleExecCommand("underline");
 });
 
-document.querySelector("button#strikethrough").addEventListener("click", () => {
+document.querySelector("#strikethrough").addEventListener("click", () => {
 	handleExecCommand("strikethrough");
 });
 
