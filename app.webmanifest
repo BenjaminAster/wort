@@ -1,0 +1,23 @@
+{
+	"name": "Wort",
+	"description": "A simple Microsoft Word alternative",
+	"scope": "./",
+	"start_url": "./",
+	"background_color": "#2F3034",
+	"theme_color": "royalblue",
+	"display": "standalone",
+	"icons": [
+		{
+			"src": "./assets/icon.png",
+			"type": "image/png",
+			"sizes": "512x512",
+			"purpose": "any monochrome"
+		},
+		{
+			"src": "./assets/maskable.png",
+			"type": "image/png",
+			"sizes": "512x512",
+			"purpose": "maskable"
+		}
+	]
+}

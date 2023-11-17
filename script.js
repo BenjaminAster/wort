@@ -31,6 +31,7 @@ let /** @type {string} */ lastPressedKey;
 // let wasAtLineStartPreviously = false;
 let /** @type {number} */ currentCaretBlinkingTimeoutId;
 let /** @type {Partial<LogicalDOMRect>} */ prevCaretRect;
+let warnBeforeClosing = false;
 
 const removeChildren = (/** @type {Element} */ element) => {
 	for (const child of [...element.children]) {
@@ -43,14 +44,12 @@ const clamp = (/** @type {number} */ min, /** @type {number} */ value, /** @type
 );
 
 const updateHighlighting = () => {
-	console.debug("%cupdate highlighting", "color: cadetblue");
+	// console.debug("%cupdate highlighting", "color: cadetblue");
 
 	const selection = document.getSelection();
 
 	if (selection.rangeCount === 0) {
 		return;
-	} else if (selection.rangeCount > 1) {
-		console.error(`selection has not one but ${selection.rangeCount} ranges`, selection);
 	}
 
 	const selectionRange = selection.getRangeAt(0);
@@ -87,11 +86,11 @@ const updateHighlighting = () => {
 			||
 			selectionRange.startContainer !== selectionRange.commonAncestorContainer
 		) {
-			console.error(`caret end container or common ancestor container is not start container`);
+			// console.error(`caret end container or common ancestor container is not start container`);
 		}
 
 		if (selectionRange.startOffset !== selectionRange.endOffset) {
-			console.error(`caret start offset is not caret end offset`, selectionRange.startOffset, selectionRange.endOffset);
+			// console.error(`caret start offset is not caret end offset`, selectionRange.startOffset, selectionRange.endOffset);
 		}
 
 		const offset = selectionRange.startOffset;
@@ -129,7 +128,7 @@ const updateHighlighting = () => {
 		const rectToCompare1 = getRectsFromRelativeRange(-1).at(-1);
 		const rectToCompare2 = rectsOfCaret[1] ?? getRectsFromRelativeRange(0, 1)[0];
 
-		console.log(container, offset);
+		// console.log(container, offset);
 
 		// console.log(getRectsFromRelativeRange(0, 0));
 
@@ -232,7 +231,7 @@ let tooManySelectionchangesMightFollow = false; // circumvent WebKit bug (dispat
 let prevRealSelectionchangeTime = 0;
 
 document.addEventListener("selectionchange", () => {
-	console.debug("selectionchange", performance.now());
+	// console.debug("selectionchange", performance.now());
 
 	if (highlightAlreadyUpdated) {
 		highlightAlreadyUpdated = false;
@@ -263,15 +262,19 @@ window.addEventListener("blur", () => {
 window.addEventListener("focus", updateHighlighting);
 
 editor.addEventListener("beforeinput", event => {
-	console.debug("beforeinput", event)
+	// console.debug("beforeinput", event)
 });
 
+const segmenter = Intl.Segmenter && new Intl.Segmenter(["en"], { granularity: "word" });
+
 editor.addEventListener("input", ({ inputType }) => {
-	console.debug("input", inputType);
+	// console.debug("input", inputType);
 
 	// await 0;
 
 	// console.time("checkinputtype")
+
+	warnBeforeClosing = true;
 
 	if ([
 		// https://w3c.github.io/input-events/#interface-InputEvent-Attributes
@@ -293,16 +296,25 @@ editor.addEventListener("input", ({ inputType }) => {
 	} else {
 		// console.timeEnd("checkinputtype");
 	}
+
+	if (segmenter) {
+		const wordCount = [...segmenter.segment([...editor.children].map(child => child.textContent).join(" "))].filter(i => i.isWordLike).length;
+		document.querySelector("#word-count").textContent = wordCount.toString();
+	}
+});
+
+window.addEventListener("beforeunload", (event) => {
+	if (warnBeforeClosing) event.returnValue = true;
 });
 
 const handleExecCommand = (/** @type {ExecCommandCommandId} */ commandId) => {
 	highlightAlreadyUpdated = true;
-	console.debug("before execcommand")
+	// console.debug("before execcommand")
 	// TODO: replace execCommand() with a non-buggy, non-non-standardized, interoperable, self-made implementation
 	document.execCommand(commandId);
-	console.debug("execcommand finished")
+	// console.debug("execcommand finished")
 	updateHighlighting();
-	console.debug("highlight update after execcommand finished")
+	// console.debug("highlight update after execcommand finished")
 }
 
 window.addEventListener("keydown", (event) => {

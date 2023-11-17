@@ -121,7 +121,7 @@ header :is(button, label) {
 
 footer {
 	padding-block: .1rem;
-	padding-inline: .3rem;
+	padding-inline: .4rem;
 	background-color: var(--footer);
 	border-block-start: 1px solid var(--footer-top-border);
 }
@@ -133,6 +133,8 @@ footer {
 	position: relative;
 	overflow: auto;
 	background-color: var(--editor-area);
+	scroll-behavior: smooth;
+	scroll-padding-block: 4rem;
 }
 
 .editor {
