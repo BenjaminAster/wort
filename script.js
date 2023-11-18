@@ -359,18 +359,50 @@ document.querySelector("#strikethrough").addEventListener("click", () => {
 	handleExecCommand("strikethrough");
 });
 
-{
-	let lightTheme = window.matchMedia("(prefers-color-scheme: light)").matches;
-	const updateTheme = () => {
-		document.documentElement.dataset.theme = lightTheme ? "light" : "dark";
+export const storage = new class {
+	#pathname = new URL(document.baseURI).pathname;
+	get(/** @type {string} */ key) {
+		try {
+			return JSON.parse(localStorage.getItem(`${this.#pathname}:${key}`));
+		} catch (error) {
+			console.error(error);
+			return null;
+		}
 	};
-	const checkbox = document.querySelector("input[type=checkbox]#light-theme");
-	checkbox.checked = lightTheme;
-	checkbox.addEventListener("change", () => {
-		lightTheme = checkbox.checked;
+	set(/** @type {string} */ key, /** @type {any} */ value) {
+		localStorage.setItem(`${this.#pathname}:${key}`, JSON.stringify(value));
+	};
+	remove(/** @type {string} */ key) {
+		localStorage.removeItem(`${this.#pathname}:${key}`);
+	};
+};
+
+{
+	const button = document.querySelector("button#theme-switcher");
+	
+	// color theme
+	const mediaMatch = window.matchMedia("(prefers-color-scheme: light)");
+	const themeInStorage = storage.get("color-theme") ?? "os-default";
+	let currentTheme = ((themeInStorage === "os-default" && mediaMatch.matches) || themeInStorage === "light") ? "light" : "dark";
+
+	const updateTheme = () => {
+		document.documentElement.dataset.theme = currentTheme === "light" ? "light" : "dark";
+		const themeColor = window.getComputedStyle(document.documentElement).backgroundColor.trim();
+		document.querySelector("meta[name=theme-color]").content = themeColor;
+	};
+	updateTheme();
+
+	button.addEventListener("click", async () => {
+		currentTheme = currentTheme === "dark" ? "light" : "dark";
+		storage.set("color-theme", ((currentTheme === "light") === mediaMatch.matches) ? "os-default" : currentTheme);
 		updateTheme();
 	});
-	updateTheme();
+
+	mediaMatch.addEventListener("change", ({ matches }) => {
+		currentTheme = matches ? "light" : "dark";
+		storage.set("color-theme", "os-default");
+		updateTheme();
+	});
 }
 
 export { };

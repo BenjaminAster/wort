@@ -11,6 +11,7 @@
 	<!-- <meta property="og:image" content="https://benjaminaster.com/NAME/assets/icon.png" /> -->
 	<meta name="theme-color" content="royalblue" />
 
+	<base href="./" />
 	<link rel="icon" href="./assets/icon.svg" type="image/svg+xml" sizes="any" />
 	<link rel="icon" href="./assets/icon.png" type="image/png" sizes="512x512" />
 	<link rel="manifest" href="./app.webmanifest" />
@@ -33,14 +34,13 @@
 	<!-- <div class="cursor"></div> -->
 
 	<header>
-		<button id="bold" title="Toggle bold (Ctrl+B)"><code><b>B</b></code></button>
-		<button id="italic" title="Toggle italic (Ctrl+I)"><code><i>I</i></code></button>
-		<button id="underline" title="Toggle underline (Ctrl+U)"><code><u>U</u></code></button>
-		<button id="strikethrough" title="Toggle strikethrough (Ctrl+Shift+S)"><code><s>S</s></code></button>
-		<label>
-			<input type="checkbox" id="light-theme">
-			light
-		</label>
+		<div class="header-inner">
+			<img src="./assets/icon.svg" class="icon" alt="icon of Wort" />
+			<button id="bold" title="Toggle bold (Ctrl+B)"><code><b>B</b></code></button>
+			<button id="italic" title="Toggle italic (Ctrl+I)"><code><i>I</i></code></button>
+			<button id="underline" title="Toggle underline (Ctrl+U)"><code><u>U</u></code></button>
+			<button id="strikethrough" title="Toggle strikethrough (Ctrl+Shift+S)"><code><s>S</s></code></button>
+		</div>
 	</header>
 
 	<div class="editor-container">
@@ -57,9 +57,10 @@
 			</div>
 		</div>
 		<div class="editor" contentEditable spellcheck="false">
-			<div>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab molestiae accusantium, iure facere alias quaerat doloremque perferendis cupiditate ullam iste non quae voluptate laudantium a odit at officia corrupti exercitationem officiis accusamus tenetur dolores voluptatum voluptates? Fugiat maxime sapiente quis, soluta nesciunt at fugit temporibus odit magni voluptatum eveniet ducimus distinctio dicta eos animi tempora consequatur, cupiditate sit dolor. Temporibus esse facere praesentium officia odio quis, accusamus adipisci numquam quia nisi tenetur eaque alias, quisquam illo fugiat enim voluptas labore repellat nihil autem aliquam error magni eius. Nam libero voluptas veniam nisi nobis, eos aperiam eaque illum laboriosam iste sed?
-			</div>
+			<div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit ipsam qui ducimus nisi consequatur quod laborum ullam impedit, non aut esse aperiam laboriosam a reprehenderit ratione consequuntur ipsum explicabo sed iste voluptates unde architecto. Necessitatibus quo doloribus, consequuntur adipisci repellat incidunt eum animi eos impedit, eius doloremque veritatis suscipit provident vel. Nisi ipsa iste pariatur corrupti delectus ratione, voluptatum cupiditate fugit quis molestias, perspiciatis aut tenetur reiciendis ab repellendus qui alias ex quas animi quos libero ut tempore blanditiis nihil. Iure facere aliquid perspiciatis quos dolores fugit enim nesciunt, veniam earum, molestias placeat eveniet culpa quas optio sit. Fuga, ducimus?</div>
+			<div>Laboriosam alias, deserunt maiores debitis esse quasi praesentium tempora officiis impedit ipsam, iste veniam asperiores amet quae sequi ipsa deleniti sit sunt dolor velit dicta vel? Odit est earum dignissimos doloribus possimus dolore amet itaque voluptate illum neque laboriosam porro vitae sint sunt, distinctio labore et ab nisi fugiat harum quisquam blanditiis molestias? Fugit commodi ad illo molestias nesciunt? Et sunt accusamus dolore minima earum explicabo inventore voluptatum similique ducimus. Dolor, dolorem repellendus? Ab sapiente beatae consequatur hic cupiditate dolorem corrupti quidem voluptates vero quisquam pariatur illo, suscipit voluptatibus saepe eveniet maiores explicabo ut. Eligendi quibusdam officiis maxime corporis accusantium.</div>
+			<div>Cumque accusantium facilis, similique tempora aut fugit architecto sed possimus beatae! Numquam reprehenderit corporis quidem id impedit praesentium itaque obcaecati, dolores ipsam, ea ullam amet, inventore perspiciatis aspernatur voluptates sed pariatur delectus doloremque modi veniam? Exercitationem consequatur maiores voluptatem iusto dolorum, minus facilis temporibus culpa fugiat ex id laboriosam totam, aspernatur atque recusandae libero architecto ratione quam distinctio vel. Perspiciatis fugit, commodi accusamus quos natus at ipsa nihil sit dolorum architecto placeat, necessitatibus nemo magni incidunt pariatur molestias suscipit rerum doloribus voluptatibus temporibus fugiat rem. Asperiores ea, consequuntur repudiandae culpa optio ad ut, cum quaerat repellendus illo, qui natus velit.</div>
+			<div>Possimus corporis ipsum voluptas delectus dolores, expedita facilis distinctio ea ullam, recusandae illo quod beatae debitis ducimus obcaecati praesentium, voluptatibus a fuga non doloribus doloremque incidunt deleniti ratione? Ex facilis voluptatum cum! Accusamus iste eligendi facilis, officia saepe impedit consequuntur libero cum vero doloremque exercitationem voluptatibus minima laboriosam modi unde necessitatibus id fugiat. Reprehenderit numquam excepturi modi! Possimus, quis molestias quaerat non accusamus quisquam eveniet aperiam quo est, aut amet dolore ipsa beatae! Hic, porro minima dicta, nulla consectetur asperiores dolores illo soluta eligendi quaerat maxime? Enim vero commodi quasi aliquam, atque, nam incidunt nemo fugiat ex reiciendis quisquam! Modi!</div>
 			<!-- <h1>Word processor</h1>
 			<div>
 				A <b>word processor</b> (<b>WP</b>)<sup><a href="#cite_note-1">[1]</a></sup><sup><a href="#cite_note-2">[2]</a></sup> is a device or computer program that provides for input, editing, formatting, and output of text, often with some additional features.
@@ -135,8 +136,23 @@
 	</div>
 
 	<footer>
-		<span id="word-count">0</span> words
-	</footer>
+		<div class="side">
+			<div>
+				<span id="word-count">0</span> words
+			</div>
+			<div>
+				Language: English
+			</div>
+		</div>
+		<div class="side">
+			<div>
+				Browser: Chromium
+			</div>
+			<div>
+				<button id="theme-switcher" title="Toggle light theme"></button>
+			</div>
+		</div>
+</footer>
 </body>
 
 </html>
