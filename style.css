@@ -26,8 +26,8 @@
 
 	--selection: var(--text);
 
-	@supports (not selector(::-webkit-scrollbar)) {
-		scrollbar-color: var(--scrollbar-color);
+	@supports not selector(::-webkit-scrollbar) {
+		scrollbar-color: var(--scrollbar-color) transparent;
 	}
 }
 
@@ -118,7 +118,7 @@ body {
 }
 
 header {
-	padding: 8px;
+	padding: 10px;
 	padding-block-end: 0;
 	/* background-color: var(--gray-1); */
 	/* border-block-end: 1px solid var(--header-bottom-border); */
@@ -151,9 +151,13 @@ header {
 		/* background-color: var(--gray-3); */
 		transition: background-color .15s;
 
-		@media (hover) { &:hover {
+		@media (hover) { &:hover:not(:active) {
 			background-color: color-mix(in srgb, var(--header), var(--text) 10%);
 		}}
+
+		&:active {
+			background-color: color-mix(in srgb, var(--header), var(--text) 15%);
+		}
 	}
 }
 
@@ -172,7 +176,6 @@ footer {
 		&:first-child {
 			box-shadow: 0 1px var(--gray-1);
 			flex-grow: 1;
-			z-index: 1;
 		}
 
 		& > * {
@@ -336,30 +339,31 @@ footer {
 	/* transition-duration: 70ms; */
 }
 
+@media (hover) {
+	::-webkit-scrollbar, ::-webkit-scrollbar-corner {
+		inline-size: .8rem;
+		block-size: .8rem;
+		background: none;
+	}
 
-::-webkit-scrollbar, ::-webkit-scrollbar-corner {
-	inline-size: .8rem;
-	block-size: .8rem;
-	background: none;
-}
+	::-webkit-scrollbar-button:start:increment, ::-webkit-scrollbar-button:end:decrement {
+		display: none;
+	}
 
-::-webkit-scrollbar-button:start:increment, ::-webkit-scrollbar-button:end:decrement {
-	display: none;
-}
+	::-webkit-scrollbar-thumb, ::-webkit-scrollbar-button {
+		background-color: var(--scrollbar-color);
+		inline-size: .8rem;
+		block-size: .8rem;
+		border: .2rem solid transparent;
+		border-radius: .4rem;
+		background-clip: padding-box;
+	}
 
-::-webkit-scrollbar-thumb, ::-webkit-scrollbar-button {
-	background-color: var(--scrollbar-color);
-	inline-size: .8rem;
-	block-size: .8rem;
-	border: .2rem solid transparent;
-	border-radius: .4rem;
-	background-clip: padding-box;
-}
+	::-webkit-scrollbar-button {
+		background-color: color-mix(in srgb, var(--text) 10%, transparent);
+	}
 
-::-webkit-scrollbar-button {
-	background-color: color-mix(in srgb, var(--text) 10%, transparent);
-}
-
-::-webkit-scrollbar-thumb:hover, ::-webkit-scrollbar-button:hover {
-	background-color: color-mix(in srgb, var(--scrollbar-color) 85%, var(--text))
+	::-webkit-scrollbar-thumb:hover, ::-webkit-scrollbar-button:hover {
+		background-color: color-mix(in srgb, var(--scrollbar-color), var(--text) 20%)
+	}
 }

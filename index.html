@@ -8,19 +8,26 @@
 	<meta name="author" content="Benjamin Aster" />
 	<meta name="description" content="A simple Microsoft Word alternative" />
 	<meta name="repository" content="https://github.com/BenjaminAster/wort" />
-	<!-- <meta property="og:image" content="https://benjaminaster.com/NAME/assets/icon.png" /> -->
-	<meta name="theme-color" content="royalblue" />
-
+	<meta property="og:image" content="https://benjaminaster.com/wort/assets/screenshot-desktop.png" />
+	<meta property="twitter:card" content="summary_large_image" />
+	
 	<base href="./" />
 	<link rel="icon" href="./assets/icon.svg" type="image/svg+xml" sizes="any" />
 	<link rel="icon" href="./assets/icon.png" type="image/png" sizes="512x512" />
 	<link rel="manifest" href="./app.webmanifest" />
+	<meta name="theme-color" content="#161616" />
 
 	<title>Wort &ndash; A Word alternative</title>
 
 	<link rel="stylesheet" href="./style.css" />
 
-	<script type="module" src="./script.js"></script>
+	<script type="module" src="./js/main.js"></script>
+
+	<script type="module">
+		if (!CSS.supports("(color: color-mix(in srgb, oklch(1% 1% 1deg), red))") && localStorage.getItem(`${location.pathname}:force`) !== "true") {
+			location.assign("/update-your-browser/?source=" + location.pathname);
+		}
+	</script>
 </head>
 
 <body>
@@ -28,10 +35,6 @@
 		Please enable JavaScript to view this site.
 		<hr />
 	</noscript>
-
-	<!-- <div class="editor" contentEditable="plaintext-only"> -->
-	<!-- This <code>is</code> a <code>rich text</code> editor test -->
-	<!-- <div class="cursor"></div> -->
 
 	<header>
 		<div class="header-inner">
@@ -61,77 +64,6 @@
 			<div>Laboriosam alias, deserunt maiores debitis esse quasi praesentium tempora officiis impedit ipsam, iste veniam asperiores amet quae sequi ipsa deleniti sit sunt dolor velit dicta vel? Odit est earum dignissimos doloribus possimus dolore amet itaque voluptate illum neque laboriosam porro vitae sint sunt, distinctio labore et ab nisi fugiat harum quisquam blanditiis molestias? Fugit commodi ad illo molestias nesciunt? Et sunt accusamus dolore minima earum explicabo inventore voluptatum similique ducimus. Dolor, dolorem repellendus? Ab sapiente beatae consequatur hic cupiditate dolorem corrupti quidem voluptates vero quisquam pariatur illo, suscipit voluptatibus saepe eveniet maiores explicabo ut. Eligendi quibusdam officiis maxime corporis accusantium.</div>
 			<div>Cumque accusantium facilis, similique tempora aut fugit architecto sed possimus beatae! Numquam reprehenderit corporis quidem id impedit praesentium itaque obcaecati, dolores ipsam, ea ullam amet, inventore perspiciatis aspernatur voluptates sed pariatur delectus doloremque modi veniam? Exercitationem consequatur maiores voluptatem iusto dolorum, minus facilis temporibus culpa fugiat ex id laboriosam totam, aspernatur atque recusandae libero architecto ratione quam distinctio vel. Perspiciatis fugit, commodi accusamus quos natus at ipsa nihil sit dolorum architecto placeat, necessitatibus nemo magni incidunt pariatur molestias suscipit rerum doloribus voluptatibus temporibus fugiat rem. Asperiores ea, consequuntur repudiandae culpa optio ad ut, cum quaerat repellendus illo, qui natus velit.</div>
 			<div>Possimus corporis ipsum voluptas delectus dolores, expedita facilis distinctio ea ullam, recusandae illo quod beatae debitis ducimus obcaecati praesentium, voluptatibus a fuga non doloribus doloremque incidunt deleniti ratione? Ex facilis voluptatum cum! Accusamus iste eligendi facilis, officia saepe impedit consequuntur libero cum vero doloremque exercitationem voluptatibus minima laboriosam modi unde necessitatibus id fugiat. Reprehenderit numquam excepturi modi! Possimus, quis molestias quaerat non accusamus quisquam eveniet aperiam quo est, aut amet dolore ipsa beatae! Hic, porro minima dicta, nulla consectetur asperiores dolores illo soluta eligendi quaerat maxime? Enim vero commodi quasi aliquam, atque, nam incidunt nemo fugiat ex reiciendis quisquam! Modi!</div>
-			<!-- <h1>Word processor</h1>
-			<div>
-				A <b>word processor</b> (<b>WP</b>)<sup><a href="#cite_note-1">[1]</a></sup><sup><a href="#cite_note-2">[2]</a></sup> is a device or computer program that provides for input, editing, formatting, and output of text, often with some additional features.
-			</div>
-			<div>
-				<a href="https://en.wikipedia.org/wiki/Word_processor_(electronic_device)" title="Word processor (electronic device)">Early word processors</a> were stand-alone devices dedicated to the function, but current word processors are <a href="https://en.wikipedia.org/wiki/Word_processor_program" title="Word processor program">word processor programs</a> running on general purpose computers.
-			</div>
-			<div>
-				The functions of a word processor program fall somewhere between those of a simple <a href="https://en.wikipedia.org/wiki/Text_editor" title="Text editor">text editor</a> and a fully functioned <a href="https://en.wikipedia.org/wiki/Desktop_publishing" title="Desktop publishing">desktop publishing</a> program. However, the distinctions between these three have changed over time and were unclear after 2010.<sup><a href="#cite_note-3">[3]</a></sup><sup><a href="#cite_note-4">[4]</a></sup>
-			</div>
-			<h2>
-				<span>Background</span>
-			</h2>
-			<div>
-				Word processors did not develop <i>out</i> of computer technology. Rather, they evolved from mechanical machines and only later did they merge with the computer field.<sup><a href="#cite_note-5">[5]</a></sup> The history of word processing is the story of the gradual automation of the physical aspects of writing and editing, and then to the refinement of the technology to make it available to corporations and Individuals.
-			</div>
-			<div>
-				The term <i>word processing</i> appeared in American offices in early 1970s centered on the idea of streamlining the work to typists, but the meaning soon shifted toward the automation of the whole editing cycle.
-			</div>
-			<div>
-				At first, the designers of word processing systems combined existing technologies with emerging ones to develop stand-alone equipment, creating a new business distinct from the emerging world of the personal computer. The concept of word processing arose from the more general <i>data</i> processing, which since the 1950s had been the application of computers to business administration.<sup><a href="#cite_note-6">[6]</a></sup>
-			</div>
-			<div>
-				Through history, there have been three types of word processors: mechanical, electronic and software.
-			</div>
-			<h2>
-				<span>Mechanical word processing</span>
-			</h2>
-			<div>
-				The first word processing device (a "Machine for Transcribing Letters" that appears to have been similar to a typewriter) was patented by <a href="https://en.wikipedia.org/wiki/Henry_Mill" title="Henry Mill">Henry Mill</a> for a machine that was capable of "writing so clearly and accurately you could not distinguish it from a printing press".<sup><a href="#cite_note-7">[7]</a></sup> More than a century later, another patent appeared in the name of <a href="https://en.wikipedia.org/wiki/William_Austin_Burt" title="William Austin Burt">William Austin Burt</a> for the <a href="https://en.wikipedia.org/wiki/Typographer_(typewriter)" title="Typographer (typewriter)">typographer</a>. In the late 19th century, <a href="https://en.wikipedia.org/wiki/Christopher_Latham_Sholes" title="Christopher Latham Sholes">Christopher Latham Sholes</a><sup><a href="#cite_note-8">[8]</a></sup> created the first recognizable typewriter although it was a large size, which was described as a "literary piano".<sup><a href="#cite_note-9">[9]</a></sup>
-			</div>
-			<div>
-				The only "word processing" these mechanical systems could perform was to change where letters appeared on the page, to fill in spaces that were previously left on the page, or to skip over lines. It was not until decades later that the introduction of electricity and electronics into typewriters began to help the writer with the mechanical part. The term “word processing” (translated from the German word <i>Textverarbeitung</i>) itself was created in the 1950s by <a href="https://en.wikipedia.org/wiki/Ulrich_Steinhilper" title="Ulrich Steinhilper">Ulrich Steinhilper</a>, a German IBM typewriter sales executive. However, it did not make its appearance in 1960s office management or computing literature (an example of <a href="https://en.wikipedia.org/wiki/Grey_literature" title="Grey literature">grey literature</a>), though many of the ideas, products, and technologies to which it would later be applied were already well known. Nonetheless, by 1971 the term was recognized by the <i>New York Times</i><sup><a href="#cite_note-10">[10]</a></sup> as a business "<a href="https://en.wikipedia.org/wiki/Buzz_word" title="Buzz word">buzz word</a>". Word processing paralleled the more general "data processing", or the application of computers to business administration.
-			</div>
-			<div>
-				Thus by 1972 discussion of word processing was common in publications devoted to business office management and technology, and by the mid-1970s the term would have been familiar to any office manager who consulted business periodicals.
-			</div> -->
-
-			<!-- <div>
-				Microsoft Word is a word processor developed by Microsoft. It was first released on October 25, 1983, under the name Multi-Tool Word for Xenix systems. Subsequent versions were later written for several other platforms including: IBM PCs running DOS (1983), Apple Macintosh running the Classic Mac OS (1985), AT&T UNIX PC (1985), Atari ST (1988), OS/2 (1989), Microsoft Windows (1989), SCO Unix (1990), macOS (2001), Web browsers (2010), iOS (2014) and Android (2015). Using Wine, versions of Microsoft Word before 2013 can be run on Linux.
-			</div>
-			<div>
-				Commercial versions of Word are licensed as a standalone product or as a component of Microsoft Office suite of software, which can be purchased either with a perpetual license or as part of a Microsoft 365 subscription.
-			</div> -->
-			<!-- <div>
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores iusto sapiente facere, omnis ipsam et dicta quae eum iure voluptatibus sed optio rerum asperiores ad distinctio aliquam incidunt quos deserunt atque cum. Nesciunt fugit soluta in esse nulla, accusantium corporis fuga quisquam illum temporibus. Ratione, dolore officia, laudantium obcaecati nisi eaque voluptate, sequi asperiores est odio perferendis beatae rem quo maiores blanditiis corrupti aliquid mollitia adipisci magnam perspiciatis assumenda cupiditate! Eveniet cumque odit amet vero ullam maxime quo asperiores, perspiciatis praesentium corporis qui in laudantium quae quasi quas nisi ipsam? Perferendis esse praesentium eum voluptates facere distinctio perspiciatis a odit quod rem commodi velit iste, sunt modi quia id architecto mollitia. Delectus repellat expedita enim ullam magnam, vero praesentium illo vel, nulla, cumque sint officia ad! Laudantium debitis velit, quo incidunt quasi exercitationem quam repellat provident consequatur ipsa ut reprehenderit qui distinctio ad facilis voluptate numquam. Corrupti modi, impedit consequuntur magnam ad eum corporis iure nam sapiente deleniti fugit maiores? Quisquam assumenda voluptas odio eaque ipsa similique, dignissimos quas. Laboriosam totam aliquid nulla praesentium aliquam aut esse iure rem? A reprehenderit quam nam, facere repellendus quibusdam, officia iure necessitatibus quo, libero dolor reiciendis voluptatibus nulla temporibus aspernatur modi accusantium voluptates placeat vero neque eos laborum delectus repudiandae. Voluptatibus illum, tempora sit obcaecati in libero pariatur non voluptates animi repellat consequuntur cupiditate dolorum delectus ad itaque ducimus soluta. Numquam vel ipsa neque doloremque qui eum tempora. Quo in nemo sed quia, quae quas pariatur omnis tenetur exercitationem debitis natus voluptatibus enim sunt voluptatum ratione nihil autem? Modi aliquam numquam consequatur ad iure? Dolor magni illo natus cupiditate aspernatur iste, culpa alias nostrum. Iste repellendus ipsa dolor ut exercitationem veniam voluptatem molestias? Velit, placeat sunt? Cupiditate unde culpa rerum molestiae? Necessitatibus, blanditiis laboriosam. Quasi nulla quae sapiente. Nobis quasi adipisci odio quis.
-			</div>
-			<div>
-				Provident perferendis eligendi delectus accusamus corporis quae officia dolorum? Dolore molestias soluta nesciunt optio enim cupiditate impedit voluptatibus eos obcaecati tempora amet non aperiam repudiandae voluptatum modi in harum voluptates quae doloremque unde odit vitae, illo nam! Minus neque ex sit soluta! Qui sequi quasi soluta commodi odio possimus sed nostrum cupiditate ad dolores, enim quod aspernatur porro ut laborum ullam omnis voluptatibus eos corrupti illum libero tempora? Cum dolorem, natus autem esse at numquam architecto qui perspiciatis. Delectus est optio voluptas alias quibusdam numquam quis doloremque eligendi ipsam blanditiis eaque odio tempora aperiam impedit eius soluta accusamus in earum, asperiores eum magni enim. Quidem ipsum assumenda vitae voluptate dolores nam pariatur reprehenderit asperiores esse ex quod officiis magnam hic molestiae nostrum illo necessitatibus, veritatis aperiam fuga quos recusandae molestias eaque! Necessitatibus a, deleniti quidem nobis in cupiditate unde dolorum facilis soluta doloribus quo dignissimos ex laborum excepturi quae at nihil voluptate architecto accusamus quos repudiandae sed odio, molestiae cum. Nulla nostrum consequuntur delectus voluptatum fugit hic ullam, laboriosam eligendi repellat exercitationem obcaecati eveniet impedit sequi natus, doloribus corporis soluta reprehenderit dignissimos pariatur. Necessitatibus illo asperiores sunt reiciendis saepe doloremque nemo incidunt non ad fugiat delectus eligendi perferendis harum aperiam nostrum, dolorem quam. Rerum beatae autem, laboriosam porro mollitia doloribus magnam error vero officiis atque nisi accusantium sapiente laudantium itaque quod illo blanditiis et, doloremque odit! A, perspiciatis ducimus. Architecto, molestiae eum. Debitis corporis adipisci fuga porro perferendis! Doloribus obcaecati provident amet voluptas vel maxime fugit saepe temporibus possimus in, perspiciatis reiciendis magni nobis sint aliquid facilis ullam officiis ipsum iste, eaque tenetur cupiditate! Reiciendis tempore doloribus facere non accusamus ducimus, voluptas saepe exercitationem cumque, enim blanditiis, deleniti amet similique temporibus voluptatum quas officia voluptatem atque minus culpa quisquam! Maiores laudantium velit recusandae nam earum reiciendis animi, perferendis hic rem.
-			</div>
-			<div>
-				Necessitatibus ex dignissimos molestiae labore error rem hic minus excepturi dolor harum, sit iusto in maiores aut optio aliquid nemo provident eveniet consequuntur architecto. Veritatis dolorem quae, itaque eligendi id repellendus provident necessitatibus, eos similique dolores totam esse minima assumenda temporibus repellat? Earum magni voluptate eveniet libero minus repellendus dolorum excepturi eius. Id minus, eaque, molestiae similique dolores voluptates illum hic laboriosam quidem at aliquam deleniti quibusdam magni quo nulla facere repellat ab officiis? Consectetur facere corrupti nostrum ab aliquam tempora doloremque commodi labore! Quo maiores consequatur beatae, quas nulla sequi earum dolorem tenetur perspiciatis illum. Quas dolorem aliquid, nemo minima voluptates ab reiciendis laboriosam fugiat at iure dolores sunt doloribus voluptatum, recusandae harum cum esse, laborum saepe optio itaque blanditiis sequi! Aperiam temporibus pariatur autem nobis nihil. Unde voluptatibus, temporibus vitae at accusantium consectetur cum, dolorum quis minus porro eos in accusamus. Porro nesciunt quibusdam repellat voluptates, veniam voluptatum provident necessitatibus! Alias rem porro earum blanditiis aliquam explicabo inventore magnam numquam ratione tenetur itaque, ad praesentium atque minima fugit repellendus sequi sed voluptas quo pariatur perspiciatis at cumque cum? Ipsa ratione, nam iste nulla iusto mollitia officia quam provident voluptatum voluptatem. Quam at aliquam, obcaecati ducimus porro et? Molestias quibusdam corrupti eius mollitia nostrum ullam neque veniam qui quod similique dolores, asperiores itaque! Laborum odio ea ipsum tempora sit, autem possimus maiores ducimus repudiandae culpa quia saepe eaque temporibus, eligendi harum quas quam nam distinctio! Nam commodi iste velit, excepturi nemo autem necessitatibus suscipit, qui ipsum illum tempora tempore recusandae debitis unde architecto dolorem quos, laboriosam consectetur deleniti dolor in blanditiis ea! Sint quo recusandae vero animi, esse architecto aperiam veritatis incidunt cupiditate doloribus expedita, blanditiis ipsam quae at dolor excepturi, quia ea iusto accusamus. Ab dolores voluptatem eveniet sed mollitia. Aliquid tenetur in, quam sapiente beatae tempora exercitationem!
-			</div> -->
-		<!-- <div>
-			من المهم جدًا أن ينتبه العميل لعملية اشتقاق الدهون. لجعل كبار السن حكماء ، كل نفس والأقوال التي يسعدها بحق ولكن اختيار الأشياء الأكثر قسوة إلى حد ما يقع على عاتق أولئك الذين يغادرون ومعهم. إنهم لا يعرفون أنه لا مفر من جسد المتهمين. بالعقل ، بسبب آلام الواجبات ، التي يعميها أولئك الذين يمتدحون ، ولكن بهذه اللذة ، من الصعب أن نتبع بكراهية الشيء المبارك ، الذي يفسده المزيد من الإطراء ، للحصول على بعض المرونة ، تراه برغبة كبيرة في الافتراض! سيحدث أنه يكره أيًا منهم أكثر ، والأكثر قسوة ، إذا نظرت إلى الجسد الحالي الذي يمدح ما يبدو أنه ما هو إلا نفسها؟ التسامح مع حضور الحاضر يجعل منه ملذات التمييز المميز عما يكرهه لأنه يريد الشيء الملائم ، فهناك طرق لأنها مرونة المهندس المعماري. المختار يصد أي منفعة عظيمة ، ما عدا تلك الموجودة في الحاضر ، أو لا شيء على الإطلاق ، مهما كانت الواجبات تجاهه! يريد أن يمدح الديون ، حيث تسقط وكأن التمرين الذي يصدها يعطي النتيجة نفسها حتى ينتقد من لم يميز نفسه أبدًا من أجل المتعة السهلة. الآداب الفاسدة تعيق عواقبه العظيمة عن حق الجسد ، لأن الحكماء والعطاء يهربون؟ من تلبس لذة البغضاء ونفسه ونحوه أحقهم. هل هناك الكثير من العمل الشاق أم هناك أي شيء حقيقي؟ سينتقد كيف ، بالنسبة لبعض الناس ، يتم رفضهم لأداء واجبات ضرورية بحق. لتعميه ملذات العصر ، فليولد في حرية ، لا تنفره ملذات العقل ، التي ينتج عنها شهوة الأحزان. لا هي ولا الألم الذي يراه. أين لا يوجد في عقل أحد ، ولكن لأن الأشياء التي تولد ، يجب على الجميع أن يمارسوها بسبب الملذات ، لأنها بمعنى الملذات ، ولكن لا شيء؟ لن تعمل أي تعديلات ، أليس كذلك؟ هذا الألم ، الناجم عن تلك الرغبة العظيمة ، يحفزه خطأنا الآخر. هل يجب أن يصده الألم نفسه حتى يصل التمرين إلى متعة المتاعب؟ سوف يرضون؟ من أين خطأ عناء الأشياء؟ الحاجات المداعبة الشاقة. وكأن لا شيء حكيم. يبدو أننا نحصل على شخص مكروه.
-		</div>
-		<div>
-			أنها توفر عبء اختيار الشحنة المختارة من الجسد خدمات الألم؟ إنهم لا يعرفون كيف يحلون مشاكلهم بالألم ، لأن الرغبة تعمهم اللذة وتعمهم اللذة. لا ينبغي تحريره من أقل! من يمكننا أن نتبعه كأننا تحررنا من الملذات ، ولكن رغبتنا هي الرغبة في الآلام ، فما الذي يدفعه أي نوع من الشدائد والملذات التي أفسدتها في زمن الحرية؟ مع الألم ، ولكن أن يولد ولكن ليس مهندسًا معماريًا يمكنه الرؤية. الخيار المختار هو متعة بعض الناس ، وألم اختيار نفسه يعوقه الإطراء وأوقات الكراهية تلك. إذا كان لنا أن نفترض متعة الحياة نفسها ، فلكي نجتنب الآلام تكون أقسى بسبب حقيقة أن واجباتنا هنا تمثل مشكلة كبيرة لتلك الاحتياجات ، فسوف أفتح هروب الحقيقة على مشاكل الرفض تلك! وبالضرورة ، نلين في رغبتنا ، ومن هنا تهدأ الآلام التي يبقي بها المستحقون أكثر من العمل الذي نتهمه بغير لذة ، والذي نرفضه ولكن بالكراهية ، مع المتاعب. لا يفلت هنا أي من متعنا المختارة ، وممارسة الاختيار الشاقة تصد ممارسة المكفوفين ، ويصادف أنه يعيق المولود ، المتحرر من الآلام الجسدية ، وينتقد المستحقين. غالبًا ما يتم رفض هذه الضروريات بشكل أكثر قسوة ، والألم الذي لا يقع عليه أحد هو عدم الهروب من خيار اختيار تحمل هذه ، ومنفتحتنا ، والألم الذي ولكن الأشياء المباركة ، الشاقة ما زالت ، تستسلم للأوجاع ، ولكن الخطأ الكبير في الواجبات ، وفقط أولئك الذين يمدحون المشتكين الحكماء ، لأنه يكره تلك الآلام! أ ، نحن نقودك إلى الفهم. المهندس المعماري ، يزعجه. يجب أن تحصل على جسدك على متن الطائرة! لقد أعمتهم الآلام ، فهي توفر الكثير من المتعة أو في أغلب الأحيان يمكننا الهروب في بعض الأحيان ، حيث نرى أن رفض الأشياء الكبيرة بالنسبة لنا هو شيء سهل ، أي من المهام نفسها ، وهو أمر تقوده الرغبة! لا نتهمه بتعبه وقت الرفض ، لأن المتعة غالبًا تمرين ، لأنه غالبًا ما يخفف من المداعبات وأوقات الملذات المماثلة ، وهي واجبات متعة ، ولا يلوم أحد! شيوخ المدح يريدون رفضهم بسبب رفضهم للعقل ، وإحضار الأمر هنا.
-		</div>
-		<div>
-			الضروريات من أكثر المشاكل جدارة ، خطأ العمل ، الأمر هنا سيكون أقل إرهاقًا من هؤلاء ، سواء كان ذلك فقط في التخصصات أو الخيار ، شيء لا يوفره أحد ، سينتج عنه المهندس المعماري. ألم الحقيقة الذي ، إذن ، من اختيار أن تنفر ضروريات الحياة ، ينفرها والآلام المماثلة التي يفترض أنها أقل الأوقات؟ بسرورهم الكبير سيحدث أن الرجل الحر سيكون أقل صدًا لآلامه. هذا أقل ، مكافئ
-		</div> -->
-		<!-- <div>
-			顧客がアディピシングのプロセスに注意を払うことは非常に重要です。 長老たちを正当に賢明にすることはすべて同じであり、彼が当然喜んでいることを言うが、ある程度の違いはあるものの、より厳しい物事の選択は、去る者と一緒に去る者に課せられます。 彼らは、告発者の体から逃れることができないことを知りません。 理性によって、義務の苦痛によって、賞賛する人々によって目がくらんで、しかしその喜びによって、より大きなお世辞によって堕落した祝福されたものに憎しみを持って従う方が、ある程度の柔軟性を獲得するのはより過酷である、あなたは仮定したいという大きな願望でわかります！ 自分以外のものを賞賛している現在の体を見れば、彼は彼らの誰を最も憎んでいるか、より厳しいかがわかるでしょう？ 現在の存在を許容することで、彼は自分が嫌うものと区別する楽しみを得ることができます。なぜなら、彼は便利なものを望んでいるからであり、それは建築家の柔軟性だから方法はあります。 選ばれた者は、彼に対する義務が何であれ、現在のもの以外のいかなる偉大な方便も反発するか、まったく反発しません。 彼は、あたかも反発する運動そのものが結果をもたらすかのように借金を称賛したいのですが、そうすることで、安易な快楽のために自分自身を区別しなかった人々を批判します。 腐敗したマナーは、彼の身体の権利の重大な結果を妨げ、賢明で優しい長老たちが逃げるのですか？ 憎しみの喜びを引き受ける者、そしてそれと同様のことをする者が、最もそれにふさわしい者である。 大変な苦労がたくさんあるのか、それとも本当に何かがあるのでしょうか？ 彼は、一部の人々が正当に必要な義務を遂行することに嫌悪感を抱いていることを批判するだろう。 時代の快楽に目がくらみ、悲しみの欲望をもたらす心の快楽に反発されることなく、自由の中に生まれましょう。 彼女も彼も痛みを感じません。 それは誰の心の中にもありませんが、生まれてくるものは誰もが喜びのために運動する義務があるので、それらは喜びの感覚にあるのですが、何もないのですか？ どのMODも動作しませんよね？ その大きな願望から生まれたこの痛みは、私たちの別の過失によって引き起こされます。 彼は痛み自体を嫌って、練習が困難を楽しむようになるのだろうか？ 彼らは喜んでくれるでしょうか？ 物事のトラブルの原因はどこにあるのでしょうか？ ニーズ、お世辞にも手間がかかります。 まるで何も賢明ではないかのように。 嫌な奴が来そうだ。
-		</div>
-		<div>
-			彼らは、身体の選択された負担を選択するという負担を提供しますが、どの痛みのサービスですか？ 彼らは欲望に目がくらみ、快楽に目がくらんでいるため、痛みを伴って問題を解決する方法を知りません。 レスから解放されるはずがない！ あたかも快楽から解放されたかのように、私たちは誰に従うことができますか？しかし、私たちのものは苦痛への欲望であり、自由の時代に彼らを堕落させたあらゆる種類の労苦と快楽によってさらに刺激されるものだからです。 痛みを伴いながらも、決して見ることのできる建築家には生まれません。 選ばれた選択肢は他の一部の人々の喜びであり、選択すること自体の苦痛はお世辞や憎しみの時代によって妨げられます。 人生そのものの喜びを想定するのであれば、ここでの私たちの義務はそれらのニーズにとって多大な迷惑であるという事実のせいで、免れるべき苦痛はより厳しいものになるでしょう、私はそれらの拒否の困難に対して真実の逃避を開きます！ 当然のことながら、私たちは自分の欲望において確かに和らげられ、それによって最もふさわしい人が、喜んで建築家を非難し、憎しみと困難を伴い拒否しながらも建築家を非難する労働から免れる苦痛によって、苦痛が軽減されるのである。 私たちが選んだ快楽はどれもここでは逃げられず、自分で選んだ骨の折れる運動は盲目の人の運動を反発し、体の痛みから解放されて生まれた人々をたまたま妨げ、価値のある人々を批判します。 これらの必需品はしばしばより厳しく拒否され、誰もが陥る痛みは、これらに耐えることを選択するという選択から逃げないことです、私たちの入り口、痛み しかし、祝福されたことは、依然として骨の折れる作業であり、苦痛に屈するが、義務における大きな誤りであり、賢明な告発者を称賛する人々だけです。 A、ご理解いただけるよう導きます。 建築家さん、迷惑ですよ。 飛行機の中で体を動かさなければなりません！ 痛みに目がくらむと、それは多くの喜びをもたらします。あるいは、私たちにとって大きなことを拒否することは、どんな仕事であれ、それ自体が簡単なことであり、それは欲望によって保持されていることがわかると、時々逃げ出すことができます。 私たちは、拒絶されたときに苦痛を与えるとして彼を非難しません。なぜなら、喜びはしばしば訓練であり、彼はしばしば愛撫や同様の喜びの時間によって和らげられるからであり、その義務は喜びであり、誰も責めることはありません。 称賛派の長老たちは、心の拒絶のせいで拒絶されることを望んでおり、問題をここに持ち込んでいます。
-		</div>
-		<div>
-			最も価値のあるトラブルからの必要性、仕事の間違い、ここでの問題はこれらのうち負担が少なくなり、それがメジャーであろうとオプションであろうと、誰も提供しないものであり、それは建築家に帰着します。 したがって、生活必需品をはねつけることを選択し、それらをはねのける真実の痛み、そして時代の中で最小のものであると想定される同様の痛みでしょうか？ 彼らの大きな喜びによって、自由な人が苦しみに嫌悪感を抱くことが少なくなることが起こるでしょう。 それは少ないです、等
-		</div> -->
 		</div>
 	</div>
 

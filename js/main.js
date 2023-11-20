@@ -265,7 +265,13 @@ editor.addEventListener("beforeinput", event => {
 	// console.debug("beforeinput", event)
 });
 
-const segmenter = Intl.Segmenter && new Intl.Segmenter(["en"], { granularity: "word" });
+if (!Intl.Segmenter) await import("./segmenter-polyfill.js");
+const segmenter = new Intl.Segmenter(["en"], { granularity: "word" });
+
+const updateWordCount = () => {
+	const wordCount = [...segmenter.segment([...editor.children].map(child => child.textContent).join(" "))].filter(i => i.isWordLike).length;
+	document.querySelector("#word-count").textContent = wordCount.toString();
+};
 
 editor.addEventListener("input", ({ inputType }) => {
 	// console.debug("input", inputType);
@@ -297,11 +303,10 @@ editor.addEventListener("input", ({ inputType }) => {
 		// console.timeEnd("checkinputtype");
 	}
 
-	if (segmenter) {
-		const wordCount = [...segmenter.segment([...editor.children].map(child => child.textContent).join(" "))].filter(i => i.isWordLike).length;
-		document.querySelector("#word-count").textContent = wordCount.toString();
-	}
+	if (segmenter) updateWordCount();
 });
+
+if (segmenter) updateWordCount();
 
 window.addEventListener("beforeunload", (event) => {
 	if (warnBeforeClosing) event.returnValue = true;
@@ -379,7 +384,7 @@ export const storage = new class {
 
 {
 	const button = document.querySelector("button#theme-switcher");
-	
+
 	// color theme
 	const mediaMatch = window.matchMedia("(prefers-color-scheme: light)");
 	const themeInStorage = storage.get("color-theme") ?? "os-default";

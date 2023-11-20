@@ -3,8 +3,8 @@
 	"description": "A simple Microsoft Word alternative",
 	"scope": "./",
 	"start_url": "./",
-	"background_color": "#2F3034",
-	"theme_color": "royalblue",
+	"background_color": "#303032",
+	"theme_color": "#161616",
 	"display": "standalone",
 	"icons": [
 		{
@@ -18,6 +18,22 @@
 			"type": "image/png",
 			"sizes": "512x512",
 			"purpose": "maskable"
+		}
+	],
+	"screenshots": [
+		{
+			"src": "./assets/screenshot-desktop.png",
+			"type": "image/png",
+			"sizes": "1920x1080",
+			"label": "Screenshot of Wort",
+			"form_factor": "wide"
+		},
+		{
+			"src": "./assets/screenshot-mobile.png",
+			"type": "image/png",
+			"sizes": "587x1080",
+			"label": "Screenshot of Wort",
+			"form_factor": "narrow"
 		}
 	]
 }
