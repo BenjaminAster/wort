@@ -7,6 +7,12 @@ const editor = document.querySelector(".editor");
 // const editorContainer = document.querySelector(".editor-container");
 const overlayContainer = document.querySelector(".overlay");
 
+const isTouch = window.matchMedia("(hover: none)").matches
+editor.addEventListener("contextmenu", (event) => {
+	if (isTouch) event.preventDefault();
+};
+
+
 const selectionsElement = document.querySelector(".selections");
 const selectionFragment = selectionsElement.querySelector(":scope > template").content;
 
