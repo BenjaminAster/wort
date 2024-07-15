@@ -3,29 +3,28 @@
 
 <head>
 	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
 	<meta name="robots" content="all" />
 	<meta name="author" content="Benjamin Aster" />
 	<meta name="description" content="A simple Microsoft Word alternative" />
-	<meta name="repository" content="https://github.com/BenjaminAster/wort" />
+	<link rel="code-repository" href="https://github.com/BenjaminAster/wort" />
 	<meta property="og:image" content="https://benjaminaster.com/wort/assets/screenshot-desktop.png" />
-	<meta property="twitter:card" content="summary_large_image" />
-	
+	<meta name="twitter:card" content="summary_large_image" />
+
+	<title>Wort</title>
 	<base href="./" />
 	<link rel="icon" href="./assets/icon.svg" type="image/svg+xml" sizes="any" />
 	<link rel="icon" href="./assets/icon.png" type="image/png" sizes="512x512" />
 	<link rel="manifest" href="./app.webmanifest" />
-	<meta name="theme-color" content="#161616" />
-
-	<title>Wort &ndash; A Word alternative</title>
+	<meta name="theme-color" content="#191516" />
 
 	<link rel="stylesheet" href="./style.css" />
 
 	<script type="module" src="./js/main.js"></script>
 
 	<script type="module">
-		if (!CSS.supports("(color: color-mix(in srgb, oklch(1% 1% 1deg), red))") && localStorage.getItem(`${location.pathname}:force`) !== "true") {
-			location.assign("/update-your-browser/?source=" + location.pathname);
+		if (!CSS.supports("(color: color-mix(in oklch, oklch(1% 1% 1deg), red))") && localStorage.getItem(`${location.pathname}:force`) !== "true") {
+			location.assign("/update-your-browser/");
 		}
 	</script>
 </head>
@@ -36,50 +35,68 @@
 		<hr />
 	</noscript>
 
-	<header>
+	<header lang="en">
+		<div class="app-titlebar">
+			<div class="inner">
+				<img src="./assets/icon.svg" class="icon" alt="icon of Wort" />
+				Wort
+			</div>
+		</div>
+
 		<div class="header-inner">
-			<img src="./assets/icon.svg" class="icon" alt="icon of Wort" />
 			<button id="bold" title="Toggle bold (Ctrl+B)"><code><b>B</b></code></button>
 			<button id="italic" title="Toggle italic (Ctrl+I)"><code><i>I</i></code></button>
 			<button id="underline" title="Toggle underline (Ctrl+U)"><code><u>U</u></code></button>
 			<button id="strikethrough" title="Toggle strikethrough (Ctrl+Shift+S)"><code><s>S</s></code></button>
+			<div class="space"></div>
+			<img src="./assets/icon.svg" class="icon" alt="icon of Wort" id="wort-icon" />
 		</div>
 	</header>
 
-	<div class="editor-container">
-		<div class="overlay">
-			<div class="carets">
-				<template>
-					<div class="caret"></div>
-				</template>
+	<main>
+		<div class="editor-container">
+			<div class="overlay">
+				<div class="carets">
+					<template>
+						<div class="caret"></div>
+					</template>
+				</div>
+				<div class="selections">
+					<template>
+						<div class="selection"></div>
+					</template>
+				</div>
 			</div>
-			<div class="selections">
-				<template>
-					<div class="selection"></div>
-				</template>
+			<div class="editor" id="editor" contentEditable spellcheck="false">
+				<div>Lorem ipsum dolor <span style="text-decoration-line: underline; text-decoration-thickness: 3px; text-decoration-style: dotted; text-decoration-color: limegreen;">sit</span> amet consectetur <u>adipisicing</u> elit. <span style="font-variant: small-caps;">Odit</span> ipsam qui <span style="font-weight: 900; -webkit-text-fill-color: var(--sheet); -webkit-text-stroke: 2px; paint-order: stroke fill; letter-spacing: -.1em;">ducimus</span> nisi <b>consequatur</b> quod laborum ullam <span style="background-color: color-mix(in srgb, peru, Canvas);">impedit</span>, non aut esse aperiam <s>laboriosam</s> a reprehenderit ratione <a href="#">consequuntur</a> ipsum <span style="border: 1px solid goldenrod;">explicabo</span> sed iste <i>voluptates</i> unde architecto. <span style="text-decoration-line: line-through; text-decoration-style: wavy; text-decoration-color: orangered;">Necessitatibus</span> quo <span style="font-weight: 900; font-family: cursive; color: transparent; background: linear-gradient(to right, deepskyblue, chartreuse) text;">doloribus</span>, consequuntur <u>adipisci <s>repellat</s></u><s> incidunt</s> eum animi eos impedit, eius <span style="color: red;">doloremque</span> veritatis suscipit provident vel. <a href="https://benjaminaster.com/">benjaminaster.com</a> Nisi ipsa iste pariatur corrupti delectus ratione, <span style="text-shadow: 2px 2px 2px red;">voluptatum</span> cupiditate fugit quis <span style="letter-spacing: 1px;">molestias</span>, perspiciatis aut tenetur <span style="text-transform: full-width;">reiciendis</span> ab repellendus qui alias ex quas animi quos libero ut tempore <span style="background: linear-gradient(to bottom right, white 0 49%, black 51% 100%);"><span style="color: white; mix-blend-mode: exclusion;">blanditiis</span></span> nihil. Iure facere aliquid perspiciatis quos dolores fugit enim nesciunt, veniam earum, molestias placeat eveniet culpa quas optio sit. Fuga, ducimus?</div>
+				<div>Laboriosam alias, deserunt maiores debitis esse quasi praesentium tempora officiis impedit ipsam, iste veniam asperiores amet quae sequi ipsa deleniti sit sunt dolor velit dicta vel? Odit est earum dignissimos doloribus possimus dolore amet itaque voluptate illum neque laboriosam porro vitae sint sunt, distinctio labore et ab nisi fugiat harum quisquam blanditiis molestias? Fugit commodi ad illo molestias nesciunt? Et sunt accusamus dolore minima earum explicabo inventore voluptatum similique ducimus. Dolor, dolorem repellendus? Ab sapiente beatae consequatur hic cupiditate dolorem corrupti quidem voluptates vero quisquam pariatur illo, suscipit voluptatibus saepe eveniet maiores explicabo ut. Eligendi quibusdam officiis maxime corporis accusantium.</div>
+				<div>Cumque accusantium facilis, similique tempora aut fugit architecto sed possimus beatae! Numquam reprehenderit corporis quidem id impedit praesentium itaque obcaecati, dolores ipsam, ea ullam amet, inventore perspiciatis aspernatur voluptates sed pariatur delectus doloremque modi veniam? Exercitationem consequatur maiores voluptatem iusto dolorum, minus facilis temporibus culpa fugiat ex id laboriosam totam, aspernatur atque recusandae libero architecto ratione quam distinctio vel. Perspiciatis fugit, commodi accusamus quos natus at ipsa nihil sit dolorum architecto placeat, necessitatibus nemo magni incidunt pariatur molestias suscipit rerum doloribus voluptatibus temporibus fugiat rem. Asperiores ea, consequuntur repudiandae culpa optio ad ut, cum quaerat repellendus illo, qui natus velit.</div>
+				<div>Possimus corporis ipsum voluptas delectus dolores, expedita facilis distinctio ea ullam, recusandae illo quod beatae debitis ducimus obcaecati praesentium, voluptatibus a fuga non doloribus doloremque incidunt deleniti ratione? Ex facilis voluptatum cum! Accusamus iste eligendi facilis, officia saepe impedit consequuntur libero cum vero doloremque exercitationem voluptatibus minima laboriosam modi unde necessitatibus id fugiat. Reprehenderit numquam excepturi modi! Possimus, quis molestias quaerat non accusamus quisquam eveniet aperiam quo est, aut amet dolore ipsa beatae! Hic, porro minima dicta, nulla consectetur asperiores dolores illo soluta eligendi quaerat maxime? Enim vero commodi quasi aliquam, atque, nam incidunt nemo fugiat ex reiciendis quisquam! Modi!</div>
 			</div>
 		</div>
-		<div class="editor" contentEditable spellcheck="false">
-			<div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit ipsam qui ducimus nisi consequatur quod laborum ullam impedit, non aut esse aperiam laboriosam a reprehenderit ratione consequuntur ipsum explicabo sed iste voluptates unde architecto. Necessitatibus quo doloribus, consequuntur adipisci repellat incidunt eum animi eos impedit, eius doloremque veritatis suscipit provident vel. Nisi ipsa iste pariatur corrupti delectus ratione, voluptatum cupiditate fugit quis molestias, perspiciatis aut tenetur reiciendis ab repellendus qui alias ex quas animi quos libero ut tempore blanditiis nihil. Iure facere aliquid perspiciatis quos dolores fugit enim nesciunt, veniam earum, molestias placeat eveniet culpa quas optio sit. Fuga, ducimus?</div>
-			<div>Laboriosam alias, deserunt maiores debitis esse quasi praesentium tempora officiis impedit ipsam, iste veniam asperiores amet quae sequi ipsa deleniti sit sunt dolor velit dicta vel? Odit est earum dignissimos doloribus possimus dolore amet itaque voluptate illum neque laboriosam porro vitae sint sunt, distinctio labore et ab nisi fugiat harum quisquam blanditiis molestias? Fugit commodi ad illo molestias nesciunt? Et sunt accusamus dolore minima earum explicabo inventore voluptatum similique ducimus. Dolor, dolorem repellendus? Ab sapiente beatae consequatur hic cupiditate dolorem corrupti quidem voluptates vero quisquam pariatur illo, suscipit voluptatibus saepe eveniet maiores explicabo ut. Eligendi quibusdam officiis maxime corporis accusantium.</div>
-			<div>Cumque accusantium facilis, similique tempora aut fugit architecto sed possimus beatae! Numquam reprehenderit corporis quidem id impedit praesentium itaque obcaecati, dolores ipsam, ea ullam amet, inventore perspiciatis aspernatur voluptates sed pariatur delectus doloremque modi veniam? Exercitationem consequatur maiores voluptatem iusto dolorum, minus facilis temporibus culpa fugiat ex id laboriosam totam, aspernatur atque recusandae libero architecto ratione quam distinctio vel. Perspiciatis fugit, commodi accusamus quos natus at ipsa nihil sit dolorum architecto placeat, necessitatibus nemo magni incidunt pariatur molestias suscipit rerum doloribus voluptatibus temporibus fugiat rem. Asperiores ea, consequuntur repudiandae culpa optio ad ut, cum quaerat repellendus illo, qui natus velit.</div>
-			<div>Possimus corporis ipsum voluptas delectus dolores, expedita facilis distinctio ea ullam, recusandae illo quod beatae debitis ducimus obcaecati praesentium, voluptatibus a fuga non doloribus doloremque incidunt deleniti ratione? Ex facilis voluptatum cum! Accusamus iste eligendi facilis, officia saepe impedit consequuntur libero cum vero doloremque exercitationem voluptatibus minima laboriosam modi unde necessitatibus id fugiat. Reprehenderit numquam excepturi modi! Possimus, quis molestias quaerat non accusamus quisquam eveniet aperiam quo est, aut amet dolore ipsa beatae! Hic, porro minima dicta, nulla consectetur asperiores dolores illo soluta eligendi quaerat maxime? Enim vero commodi quasi aliquam, atque, nam incidunt nemo fugiat ex reiciendis quisquam! Modi!</div>
-		</div>
-	</div>
+	</main>
 
-	<footer>
+	<footer lang="en">
 		<div class="side">
 			<div>
 				<span id="word-count">0</span> words
 			</div>
-			<div>
-				Language: English
-			</div>
+			<label>
+				Language: <select id="document-language">
+					<option value="no-spellcheck">No spellcheck</option>
+					<option value="en">English</option>
+					<option value="de">Deutsch</option>
+				</select>
+			</label>
 		</div>
 		<div class="side">
-			<div>
-				Browser: Chromium
-			</div>
+			<label title="Change the browser compatibility mode">
+				Browser: <select id="browser-compatibility">
+					<option value="blink">Chromium</option>
+					<option value="webkit">WebKit</option>
+					<option value="gecko">Firefox</option>
+				</select>
+			</label>
 			<div>
 				<button id="theme-switcher" title="Toggle light theme"></button>
 			</div>

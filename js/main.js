@@ -1,10 +1,32 @@
 
-/// <reference types="better-typescript" />
-// / <reference path="../better-ts/index.d.ts" />
-/// <reference path="./global.d.ts" />
+/** @import { LogicalDOMRect, CaretHandler, Elements } from "./global.d" */
+
+console
+
+let /** @type {CaretHandler} */ handleCaret;
+
+const $ = /** @type {Elements} */ (new Proxy({}, {
+	get(_, /** @type {string} */ name) {
+		const id = name.replaceAll(/(?<upperCaseLetter>\p{Lu})/ug, "-$<upperCaseLetter>").toLowerCase();
+		console.log(id);
+	},
+}));
+
+
+
+{
+	const div = document.createElement("div");
+	div.classList.add("highlight-inheritance-test");
+	const child = document.createElement("div");
+	div.append(child);
+	document.body.append(div);
+	if (window.getComputedStyle(div, "::selection").color !== window.getComputedStyle(child, "::selection").color) {
+		document.documentElement.classList.add("no-highlight-inheritance");
+	}
+	div.remove();
+}
 
 const editor = document.querySelector(".editor");
-// const editorContainer = document.querySelector(".editor-container");
 const overlayContainer = document.querySelector(".overlay");
 
 const selectionsElement = document.querySelector(".selections");
@@ -13,35 +35,121 @@ const selectionFragment = selectionsElement.querySelector(":scope > template").c
 const caretsElement = document.querySelector(".carets");
 const caretFragment = caretsElement.querySelector(":scope > template").content;
 
-const isApple = [
-	"iPhone",
-	"iPad",
-	"Macintosh",
-	"MacIntel",
-	"Mac",
-	"macOS",
-	"iOS",
-	"iPhoneOS",
-	"iPadOS",
-].includes(navigator.userAgentData?.platform || navigator.platform);
+const isApple = (
+	["iphone", "ipad", "macintosh", "macintel", "mac", "macos", "ios", "iphoneos", "ipados"]
+).includes((navigator.userAgentData?.platform || navigator.platform).toLowerCase());
+
+let engine = (() => {
+	if (navigator.userAgentData?.brands?.some(({ brand }) => brand === "Chromium") || /\bChrome\b/.test(navigator.userAgent)) return "blink";
+	if (/\bFirefox\b/.test(navigator.userAgent)) return "gecko";
+	if (/\bAppleWebKit\b/.test(navigator.userAgent)) return "webkit";
+	return "blink";
+})();
+
+{
+	const filePaths = {
+		blink: import.meta.resolve("./engines/blink.js"),
+		webkit: import.meta.resolve("./engines/webkit.js"),
+		gecko: import.meta.resolve("./engines/gecko.js"),
+	};
+	const updateBrowserCompatibility = async () => {
+		({ handleCaret } = await import(filePaths[engine]));
+	};
+	updateBrowserCompatibility();
+	const browserCompatibilitySwitcher = document.querySelector("select#browser-compatibility");
+	browserCompatibilitySwitcher.value = engine;
+	browserCompatibilitySwitcher.addEventListener("input", () => {
+		if (browserCompatibilitySwitcher.value !== engine) {
+			engine = browserCompatibilitySwitcher.value;
+			updateBrowserCompatibility();
+		}
+	});
+	browserCompatibilitySwitcher.addEventListener("pointerleave", () => {
+		if (browserCompatibilitySwitcher.value !== engine) {
+			engine = browserCompatibilitySwitcher.value;
+			updateBrowserCompatibility();
+		}
+	});
+}
+
+{
+	let documentLanguage = "no-spellcheck";
+	const updateDocumentLanguage = async () => {
+		if (documentLanguage === "no-spellcheck") {
+			editor.spellcheck = false;
+			editor.lang = "en";
+			document.documentElement.lang = "en";
+		} else {
+			editor.spellcheck = true;
+			editor.lang = documentLanguage;
+			document.documentElement.lang = documentLanguage;
+		}
+	};
+	const documentLanguageSwitcher = document.querySelector("select#document-language");
+	documentLanguageSwitcher.addEventListener("input", () => {
+		if (documentLanguageSwitcher.value !== documentLanguage) {
+			documentLanguage = documentLanguageSwitcher.value;
+			updateDocumentLanguage();
+		}
+	});
+	documentLanguageSwitcher.addEventListener("pointerleave", () => {
+		if (documentLanguageSwitcher.value !== documentLanguage) {
+			documentLanguage = documentLanguageSwitcher.value;
+			updateDocumentLanguage();
+		}
+	});
+}
 
 let carets = 0;
 
-let /** @type {string} */ lastPressedKey;
+export let /** @type {string} */ lastPressedKey;
 // let wasAtLineStartPreviously = false;
 let /** @type {number} */ currentCaretBlinkingTimeoutId;
-let /** @type {Partial<LogicalDOMRect>} */ prevCaretRect;
+export let /** @type {LogicalDOMRect} */ prevCaretRect;
 let warnBeforeClosing = false;
 
 const removeChildren = (/** @type {Element} */ element) => {
 	for (const child of [...element.children]) {
-		if (child.tagName !== "TEMPLATE") child.remove();
+		if (child.localName !== "template") child.remove();
 	}
 };
 
-const clamp = (/** @type {number} */ min, /** @type {number} */ value, /** @type {number} */ max) => (
+export const clamp = (/** @type {number} */ min, /** @type {number} */ value, /** @type {number} */ max) => (
 	Math.max(min, Math.min(value, max))
 );
+
+export let /** @type {DOMRect} */ physicalEditorRect;
+
+const _expose = (/** @type {Record<string, any>} */ object) => {
+	for (const [key, value] of Object.entries(object)) self[key] = value;
+};
+
+const nextTreeNodeNotInside = (/** @type {Node} */ node) => node.nextSibling ?? nextTreeNodeNotInside(node.parentNode);
+export const nextTreeNode = (/** @type {Node} */ node) => node.firstChild ?? nextTreeNodeNotInside(node);
+
+const previousTreeNodeNotOutside = (/** @type {Node} */ node) => node.lastChild ? previousTreeNodeNotOutside(node.lastChild) : node;
+export const previousTreeNode = (/** @type {Node} */ node) => node.previousSibling ? previousTreeNodeNotOutside(node.previousSibling) : node.parentNode;
+
+_expose({ nextTreeNode, previousTreeNode })
+
+export const getLayoutInfo = (/** @type {Range | Element} */ domItem) => {
+	// console.log(domItem.commonAncestorContainer)
+	const node = domItem instanceof Range ? domItem.commonAncestorContainer : domItem;
+	const element = node instanceof Element ? node : node.parentElement;
+	const { writingMode, direction } = window.getComputedStyle(element);
+	let /** @type {LogicalDOMRect[]} */ rects = [...domItem.getClientRects()].map(({ x, y, width, height }) => {
+		x -= physicalEditorRect.x;
+		y -= physicalEditorRect.y;
+		// TODO: actually handle directions and writing modes
+		return {
+			inlineStart: direction === "ltr" ? x : physicalEditorRect.width - x - width,
+			blockStart: y,
+			inlineSize: width,
+			blockSize: height,
+		};
+	});
+	return { rects, direction, writingMode };
+}
 
 const updateHighlighting = () => {
 	// console.debug("%cupdate highlighting", "color: cadetblue");
@@ -56,112 +164,18 @@ const updateHighlighting = () => {
 
 	removeChildren(selectionsElement);
 
-	const physicalEditorRect = overlayContainer.getBoundingClientRect();
+	physicalEditorRect = overlayContainer.getBoundingClientRect();
 
-	const getLayoutInfo = (/** @type {Range | Element} */ domItem) => {
-		const node = domItem instanceof Range ? domItem.commonAncestorContainer : domItem;
-		const element = node instanceof Element ? node : node.parentElement;
-		const { writingMode, direction } = window.getComputedStyle(element);
-		let /** @type {LogicalDOMRect[]} */ rects = [...domItem.getClientRects()].map(({ x, y, width, height }) => {
-			x -= physicalEditorRect.x;
-			y -= physicalEditorRect.y;
-			// TODO: actually handle directions and writing modes
-			return {
-				inlineStart: direction === "ltr" ? x : physicalEditorRect.width - x - width,
-				blockStart: y,
-				inlineSize: width,
-				blockSize: height,
-			};
-		});
-		return { rects, direction, writingMode };
-	}
-
-	if (currentCaretBlinkingTimeoutId) window.clearTimeout(currentCaretBlinkingTimeoutId);
+	if (currentCaretBlinkingTimeoutId) self.clearTimeout(currentCaretBlinkingTimeoutId);
 
 	$handleCaretsOrSelection: if (selection.isCollapsed) {
-		let /** @type {Partial<LogicalDOMRect>} */ caretRect = {};
-
-		if (
-			selectionRange.startContainer !== selectionRange.endContainer
-			||
-			selectionRange.startContainer !== selectionRange.commonAncestorContainer
-		) {
-			// console.error(`caret end container or common ancestor container is not start container`);
-		}
-
-		if (selectionRange.startOffset !== selectionRange.endOffset) {
-			// console.error(`caret start offset is not caret end offset`, selectionRange.startOffset, selectionRange.endOffset);
-		}
-
-		const offset = selectionRange.startOffset;
-
-		const container = selectionRange.startContainer;
-
-		// console.log(container)
-
-		const { direction, writingMode, fontSize, fontStyle } = window.getComputedStyle(container instanceof Element ? container : container.parentElement);
-
-		if (!editor.contains(container)) {
+		if (!editor.contains(selectionRange.startContainer)) {
 			carets = 0;
 			removeChildren(caretsElement);
 			break $handleCaretsOrSelection;
 		}
 
-		const getRectsFromRelativeRange = (/** @type {number} */ start, /** @type {number} */ length = 0) => {
-			const contentLength = container.textContent.length;
-			if (contentLength === 0 && container instanceof Element) return getLayoutInfo(container).rects;
-			const range = new Range();
-			range.setStart(container, clamp(0, offset + start, contentLength));
-			range.setEnd(container, clamp(0, offset + start + length, contentLength));
-			const { rects } = getLayoutInfo(range);
-			// console.debug(rects)
-			return rects;
-		};
-
-		const isHigherUpThan = (/** @type {Partial<LogicalDOMRect>} */ rect1, /** @type {Partial<LogicalDOMRect>} */ rect2) => (
-			rect1.blockStart + rect1.blockSize
-			<
-			rect2.blockStart + rect2.blockSize / 3
-		);
-
-		const rectsOfCaret = getRectsFromRelativeRange(0);
-		const rectToCompare1 = getRectsFromRelativeRange(-1).at(-1);
-		const rectToCompare2 = rectsOfCaret[1] ?? getRectsFromRelativeRange(0, 1)[0];
-
-		// console.log(container, offset);
-
-		// console.log(getRectsFromRelativeRange(0, 0));
-
-		if (
-			rectToCompare1 && rectToCompare2
-			&& isHigherUpThan(rectToCompare1, rectToCompare2)
-		) {
-			if (
-				lastPressedKey === "End"
-				||
-				(lastPressedKey === "ArrowDown" && isHigherUpThan(prevCaretRect, rectToCompare1))
-				||
-				(lastPressedKey === "ArrowUp" && !isHigherUpThan(rectToCompare2, prevCaretRect))
-			) {
-				caretRect.inlineStart = rectToCompare1.inlineStart + parseFloat(fontSize) / 3;
-				caretRect.blockStart = rectToCompare1.blockStart;
-				caretRect.blockSize = rectToCompare1.blockSize;
-				// wasAtLineStartPreviously = false;
-			} else {
-				caretRect.inlineStart = rectToCompare2.inlineStart;
-				caretRect.blockStart = rectToCompare2.blockStart;
-				caretRect.blockSize = rectToCompare2.blockSize;
-				// console.debug("%cat line start", "color: cyan");
-				// wasAtLineStartPreviously = true;
-			}
-		} else if (rectsOfCaret[0]) {
-			caretRect.inlineStart = rectsOfCaret[0].inlineStart;
-			caretRect.blockStart = rectsOfCaret[0].blockStart;
-			caretRect.blockSize = rectsOfCaret[0].blockSize;
-			// wasAtLineStartPreviously = false;
-		} else {
-			console.error("no caret rect");
-		}
+		const { caretRect, fontStyle } = handleCaret(selectionRange);
 
 		const caretElement = (() => {
 			if (carets === 0) {
@@ -180,7 +194,7 @@ const updateHighlighting = () => {
 		caretElement.classList.toggle("italic", fontStyle === "italic");
 
 		caretElement.classList.remove("blink");
-		currentCaretBlinkingTimeoutId = window.setTimeout(() => {
+		currentCaretBlinkingTimeoutId = self.setTimeout(() => {
 			caretElement.classList.add("blink");
 			currentCaretBlinkingTimeoutId = null;
 		}, 700);
@@ -265,7 +279,6 @@ editor.addEventListener("beforeinput", event => {
 	// console.debug("beforeinput", event)
 });
 
-if (!Intl.Segmenter) await import("./segmenter-polyfill.js");
 const segmenter = new Intl.Segmenter(["en"], { granularity: "word" });
 
 const updateWordCount = () => {
@@ -273,7 +286,7 @@ const updateWordCount = () => {
 	document.querySelector("#word-count").textContent = wordCount.toString();
 };
 
-editor.addEventListener("input", ({ inputType }) => {
+editor.addEventListener("input", ({ inputType, ...rest }) => {
 	// console.debug("input", inputType);
 
 	// await 0;
@@ -281,6 +294,8 @@ editor.addEventListener("input", ({ inputType }) => {
 	// console.time("checkinputtype")
 
 	warnBeforeClosing = true;
+
+	console.log(inputType, rest)
 
 	if ([
 		// https://w3c.github.io/input-events/#interface-InputEvent-Attributes
@@ -296,6 +311,8 @@ editor.addEventListener("input", ({ inputType }) => {
 		"deleteContent",
 		"deleteContentBackward",
 		"deleteContentForward",
+		"insertLineBreak",
+		"insertParagraph",
 	].includes(inputType)) {
 		// console.timeEnd("checkinputtype");
 		updateHighlighting();
@@ -309,7 +326,7 @@ editor.addEventListener("input", ({ inputType }) => {
 if (segmenter) updateWordCount();
 
 window.addEventListener("beforeunload", (event) => {
-	if (warnBeforeClosing) event.returnValue = true;
+	if (warnBeforeClosing) event.preventDefault();
 });
 
 const handleExecCommand = (/** @type {ExecCommandCommandId} */ commandId) => {
@@ -344,9 +361,11 @@ window.addEventListener("keydown", (event) => {
 	}
 });
 
-document.querySelector("header").addEventListener("pointerdown", (event) => {
-	event.preventDefault();
-});
+for (const button of document.querySelectorAll(".header-inner > button[id]")) {
+	button.addEventListener("pointerdown", (event) => {
+		event.preventDefault();
+	});
+}
 
 document.querySelector("#bold").addEventListener("click", () => {
 	handleExecCommand("bold");
@@ -407,6 +426,22 @@ export const storage = new class {
 		currentTheme = matches ? "light" : "dark";
 		storage.set("color-theme", "os-default");
 		updateTheme();
+	});
+}
+
+{
+	const mediaMatch = window.matchMedia("(hover)");
+	const update = () => {
+		document.documentElement.classList.toggle("can-hover", mediaMatch.matches);
+	};
+	mediaMatch.addEventListener("change", update);
+	update();
+}
+
+{
+	document.querySelector("img#wort-icon").addEventListener("dblclick", () => {
+		if (document.fullscreenElement) document.exitFullscreen();
+		else document.documentElement.requestFullscreen();
 	});
 }
 

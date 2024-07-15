@@ -2,28 +2,26 @@
 	<style>
 		:root {
 			color-scheme: dark light;
-
-			--primary: lightskyblue;
-			--secondary: royalblue;
+			--background: oklch(65% 60% 270deg);
+			--foreground: oklch(95% 60% 270deg);
 		}
-
 	</style>
 
-	<g fill="var(--secondary)">
+	<g fill="var(--background)">
 		<!-- background plate -->
-		<path fill="var(--secondary)" d="
+		<path fill="var(--background)" d="
 			M 60 60
 			a 60 60 0 0 1 60 -60
 			h 120
 			l 180 180
 			v 240
 			a 60 60 0 0 1 -60 60
-			h-240
+			h -240
 			a 60 60 0 0 1 -60 -60
 			Z
 		" />
 
-		<path fill="var(--secondary)" d="
+		<path fill="var(--background)" d="
 			M 300 0
 			h 60
 			a 60 60 0 0 1 60 60
@@ -32,84 +30,44 @@
 		" />
 	</g>
 
-	<g fill="var(--primary)">
-		<g>
-			<!-- text lines -->
-			<symbol id="text-line" width="240" height="60">
-				<path d="
-					M 15 30
-					a 15 15 0 0 1 0-30
-					h 210
-					a 15 15 0 0 1 0 30
-					Z
-				" />
-			</symbol>
-
-			<use href="#text-line" x="120" y="300" />
-			<use href="#text-line" x="120" y="360" />
-
-			<symbol id="short-text-line" width="120" height="60">
-				<path d="
-					M 15 30
-					a 15 15 0 0 1 0-30
-					h 90
-					a 15 15 0 0 1 0 30
-					Z
-				" />
-			</symbol>
-
-			<use href="#short-text-line" x="120" y="180" />
-			<use href="#short-text-line" x="120" y="240" />
-
+	<g fill="var(--foreground)">
+		<!-- text lines -->
+		<symbol id="text-line" width="240" height="60">
 			<path d="
-				M 270 195
-				a 15 15 0 0 1 15 -15
-				h 60
-				a 15 15 0 0 1 15 15
-				v 60
-				a 15 15 0 0 1 -15 15
-				h -60
-				a 15 15 0 0 1 -15 -15
+				M 15 30
+				a 15 15 0 0 1 0 -30
+				h 210
+				a 15 15 0 0 1 0 30
 				Z
 			" />
-		</g>
-	</g>
+		</symbol>
 
-	<g>
-		<!-- <style> .grid-line { stroke: violet; stroke-width: 1 } </style> -->
-		<line x1="0" y1="0" x2="480" y2="0" class="grid-line" />
-		<line x1="0" y1="30" x2="480" y2="30" class="grid-line" />
-		<line x1="0" y1="60" x2="480" y2="60" class="grid-line" />
-		<line x1="0" y1="90" x2="480" y2="90" class="grid-line" />
-		<line x1="0" y1="120" x2="480" y2="120" class="grid-line" />
-		<line x1="0" y1="150" x2="480" y2="150" class="grid-line" />
-		<line x1="0" y1="180" x2="480" y2="180" class="grid-line" />
-		<line x1="0" y1="210" x2="480" y2="210" class="grid-line" />
-		<line x1="0" y1="240" x2="480" y2="240" class="grid-line" />
-		<line x1="0" y1="270" x2="480" y2="270" class="grid-line" />
-		<line x1="0" y1="300" x2="480" y2="300" class="grid-line" />
-		<line x1="0" y1="330" x2="480" y2="330" class="grid-line" />
-		<line x1="0" y1="360" x2="480" y2="360" class="grid-line" />
-		<line x1="0" y1="390" x2="480" y2="390" class="grid-line" />
-		<line x1="0" y1="420" x2="480" y2="420" class="grid-line" />
-		<line x1="0" y1="450" x2="480" y2="450" class="grid-line" />
-		<line x1="0" y1="480" x2="480" y2="480" class="grid-line" />
-		<line x1="0" y1="0" x2="0" y2="480" class="grid-line" />
-		<line x1="30" y1="0" x2="30" y2="480" class="grid-line" />
-		<line x1="60" y1="0" x2="60" y2="480" class="grid-line" />
-		<line x1="90" y1="0" x2="90" y2="480" class="grid-line" />
-		<line x1="120" y1="0" x2="120" y2="480" class="grid-line" />
-		<line x1="150" y1="0" x2="150" y2="480" class="grid-line" />
-		<line x1="180" y1="0" x2="180" y2="480" class="grid-line" />
-		<line x1="210" y1="0" x2="210" y2="480" class="grid-line" />
-		<line x1="240" y1="0" x2="240" y2="480" class="grid-line" />
-		<line x1="270" y1="0" x2="270" y2="480" class="grid-line" />
-		<line x1="300" y1="0" x2="300" y2="480" class="grid-line" />
-		<line x1="330" y1="0" x2="330" y2="480" class="grid-line" />
-		<line x1="360" y1="0" x2="360" y2="480" class="grid-line" />
-		<line x1="390" y1="0" x2="390" y2="480" class="grid-line" />
-		<line x1="420" y1="0" x2="420" y2="480" class="grid-line" />
-		<line x1="450" y1="0" x2="450" y2="480" class="grid-line" />
-		<line x1="480" y1="0" x2="480" y2="480" class="grid-line" />
+		<use href="#text-line" x="120" y="300" />
+		<use href="#text-line" x="120" y="360" />
+
+		<symbol id="short-text-line" width="120" height="60">
+			<path d="
+				M 15 30
+				a 15 15 0 0 1 0 -30
+				h 90
+				a 15 15 0 0 1 0 30
+				Z
+			" />
+		</symbol>
+
+		<use href="#short-text-line" x="120" y="180" />
+		<use href="#short-text-line" x="120" y="240" />
+
+		<path d="
+			M 270 195
+			a 15 15 0 0 1 15 -15
+			h 60
+			a 15 15 0 0 1 15 15
+			v 60
+			a 15 15 0 0 1 -15 15
+			h -60
+			a 15 15 0 0 1 -15 -15
+			Z
+		" />
 	</g>
 </svg>
