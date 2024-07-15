@@ -32,7 +32,7 @@ const overlayContainer = document.querySelector(".overlay");
 const isTouch = window.matchMedia("(hover: none)").matches
 editor.addEventListener("contextmenu", (event) => {
 	if (isTouch) event.preventDefault();
-};
+});
 
 
 const selectionsElement = document.querySelector(".selections");
