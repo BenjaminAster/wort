@@ -199,6 +199,7 @@ body {
 			inline-size: anchor-size(self-inline);
 			inset: auto;
 			inset-area: block-end;
+			position-area: block-end; /* https://groups.google.com/a/chromium.org/g/blink-dev/c/D-vUkcOSHEg/m/9HibvGHbAwAJ */
 			box-sizing: border-box;
 			display: block;
 			position: fixed;
